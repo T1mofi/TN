@@ -732,7 +732,7 @@
                                             </textField>
                                             <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hfZ-ZZ-Xzl">
                                                 <rect key="frame" x="0.0" y="0.0" width="96" height="25"/>
-                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="hvT-qS-y50">
+                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" enabled="NO" borderStyle="bezel" drawsBackground="YES" id="hvT-qS-y50">
                                                     <font key="font" metaFont="system"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -789,11 +789,11 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dDO-Rf-LzF">
-                                                <rect key="frame" x="-2" y="22" width="42" height="15"/>
+                                                <rect key="frame" x="-2" y="22" width="99" height="15"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="15" id="oQt-jf-sus"/>
                                                 </constraints>
-                                                <textFieldCell key="cell" lineBreakMode="clipping" title="Debug" id="Pkx-0B-y5W">
+                                                <textFieldCell key="cell" lineBreakMode="clipping" title="Debug input ttys" id="Pkx-0B-y5W">
                                                     <font key="font" metaFont="cellTitle"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -801,11 +801,14 @@
                                             </textField>
                                             <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="dbC-BY-aJd">
                                                 <rect key="frame" x="0.0" y="0.0" width="96" height="21"/>
-                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="fDa-ii-uXI">
+                                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" drawsBackground="YES" id="fDa-ii-uXI">
                                                     <font key="font" metaFont="system"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 </textFieldCell>
+                                                <connections>
+                                                    <action selector="ttysDidEdited:" target="XfG-lQ-9wD" id="zYt-kP-xBj"/>
+                                                </connections>
                                             </textField>
                                         </subviews>
                                         <visibilityPriorities>
@@ -842,8 +845,9 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="debugTextField" destination="fDa-ii-uXI" id="QCJ-Zm-w9g"/>
                         <outlet property="inputTextField" destination="hfZ-ZZ-Xzl" id="C4T-80-u43"/>
-                        <outlet property="outputTextFiels" destination="YSu-QU-xls" id="mEG-Yd-nmt"/>
+                        <outlet property="outputTextFiel" destination="YSu-QU-xls" id="mEG-Yd-nmt"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

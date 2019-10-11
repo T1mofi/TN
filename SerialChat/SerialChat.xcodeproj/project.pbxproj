@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -11,6 +11,7 @@
 		07274AE3234FB75300DD7868 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07274AE2234FB75300DD7868 /* ViewController.swift */; };
 		07274AE5234FB75400DD7868 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 07274AE4234FB75400DD7868 /* Assets.xcassets */; };
 		07274AE8234FB75400DD7868 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 07274AE6234FB75400DD7868 /* Main.storyboard */; };
+		072793CF23509984003445A7 /* SwiftSerial in Frameworks */ = {isa = PBXBuildFile; productRef = 072793CE23509984003445A7 /* SwiftSerial */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				072793CF23509984003445A7 /* SwiftSerial in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,6 +81,9 @@
 			dependencies = (
 			);
 			name = SerialChat;
+			packageProductDependencies = (
+				072793CE23509984003445A7 /* SwiftSerial */,
+			);
 			productName = SerialChat;
 			productReference = 07274ADD234FB75300DD7868 /* SerialChat.app */;
 			productType = "com.apple.product-type.application";
@@ -107,6 +112,9 @@
 				Base,
 			);
 			mainGroup = 07274AD4234FB75300DD7868;
+			packageReferences = (
+				072793CD23509984003445A7 /* XCRemoteSwiftPackageReference "SwiftSerial" */,
+			);
 			productRefGroup = 07274ADE234FB75300DD7868 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -327,6 +335,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		072793CD23509984003445A7 /* XCRemoteSwiftPackageReference "SwiftSerial" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/yeokm1/SwiftSerial.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		072793CE23509984003445A7 /* SwiftSerial */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 072793CD23509984003445A7 /* XCRemoteSwiftPackageReference "SwiftSerial" */;
+			productName = SwiftSerial;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 07274AD5234FB75300DD7868 /* Project object */;
 }
