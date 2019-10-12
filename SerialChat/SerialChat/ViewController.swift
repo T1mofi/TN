@@ -7,7 +7,7 @@
 //
 
 import Cocoa
-import SwiftSerial // https://github.com/yeokm1/SwiftSerial.git
+//import SwiftSerial // https://github.com/yeokm1/SwiftSerial.git
 
 class ViewController: NSViewController {
 
@@ -16,7 +16,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var debugTextField: NSTextFieldCell!
     
     //TODO: move to init()
-    var serialPort:SerialPort = SerialPort(path: "ttys")
+    var serialPort:SerialPort = SerialPort(path: "")
     
     //TODO: Delete before release
     @IBAction func inputTextFieldDidEdited(_ sender: Any) {
@@ -24,36 +24,8 @@ class ViewController: NSViewController {
     }
     
     @IBAction func ttysDidEdited(_ sender: Any) {
-        let serialPortName = debugTextField.stringValue
-        serialPort = SerialPort(path: "/dev/ttys002")
-        
-//        //DEBUG: debug
-//        var arguments = CommandLine.arguments
-//        arguments.append("/dev/ttys002")
-//        guard arguments.count >= 2 else {
-//            print("Need serial port name like  /dev/tty001 as the first argument.")
-//            exit(1)
-//        }
-//        print("Connect to both serial ports before you continue to use this program")
-//        let portName = arguments[1]
-//        serialPort = SerialPort(path: portName)
-//
-//        do {
-//
-//            print("Attempting to open port: \(portName)")
-//            try serialPort.openPort()
-//            print("Serial port \(portName) opened successfully.")
-//            defer {
-//                serialPort.closePort()
-//                print("Port Closed")
-//            }
-//
-//        } catch PortError.failedToOpen {
-//            print("Serial port \(portName) failed to open. You might need root permissions.")
-//        } catch {
-//            print("Error: \(error)")
-//        }
-        
+        let serialPortName = "/dev/ttys00" + debugTextField.stringValue
+        serialPort = SerialPort(path: serialPortName)
         
         debugTextField.isEnabled = false
         
@@ -65,8 +37,6 @@ class ViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        
     }
     
     func waitForInput() {
@@ -89,8 +59,13 @@ class ViewController: NSViewController {
                         if (currentInputText.count > tempInputText.count) {
                             let diff = currentInputText[currentInputText.index(before: currentInputText.endIndex)]
                             
-//                            self.outputTextFiel.stringValue += String(diff)
-                            var _ = try serialPort.writeChar
+                            do {
+                                var _ = try serialPort.writeChar(String(diff))
+                            } catch PortError.failedToOpen {
+                                print("Serial port failed to open. You might need root permissions.")
+                            } catch {
+                                print("Error: \(error)")
+                            }
                         }
                         tempInputText = currentInputText
                     }
@@ -106,8 +81,9 @@ class ViewController: NSViewController {
         while true{
             do{
                 let readCharacter = try serialPort.readChar()
+                self.outputTextFiel.stringValue += String(readCharacter)
             } catch {
-                print("Error: \(error)")
+                print("Error: \(error) after read")
             }
         }
     }
@@ -121,8 +97,9 @@ class ViewController: NSViewController {
             print("Serial port opened successfully.")
             outputTextFiel.stringValue = "sussesful"
             defer {
-                serialPort.closePort()
-                print("Port Closed")
+//                serialPort.closePort()
+//                print("Port Closed")
+                print("defer")
             }
 
             serialPort.setSettings(receiveRate: .baud9600,
@@ -140,7 +117,6 @@ class ViewController: NSViewController {
 
             DispatchQueue.global(qos: .userInitiated).async {
                 do {
-//                    var _ = try serialPort.writeChar(enteredKey)
                     self.waitForInput()
                 } catch {
                     print("Error: \(error)")
@@ -160,6 +136,12 @@ class ViewController: NSViewController {
         }
     }
 
+    override func viewDidDisappear() {
+        print("view did dissaper")
+        
+        serialPort.closePort()
+        print("Port Closed")
+    }
 
 }
 
