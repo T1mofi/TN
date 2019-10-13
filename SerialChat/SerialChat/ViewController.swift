@@ -32,7 +32,9 @@ class ViewController: NSViewController {
         //TODO: move to "when port is conected"
         inputTextField.isEnabled = true
         
-        workWithPort()
+        DispatchQueue.global(qos: .userInteractive).async {
+            self.workWithPort()
+        }
     }
     
     override func viewDidLoad() {
@@ -97,17 +99,13 @@ class ViewController: NSViewController {
             print("Serial port opened successfully.")
             outputTextFiel.stringValue = "sussesful"
             defer {
-//                serialPort.closePort()
-//                print("Port Closed")
-                print("defer")
+                serialPort.closePort()
+                print("Port Closed")
             }
 
             serialPort.setSettings(receiveRate: .baud9600,
                                    transmitRate: .baud9600,
                                    minimumBytesToRead: 1)
-
-//            //Turn off output buffering if not multiple threads will have problems printing
-//            setbuf(stdout, nil);
 
 
             //Run the serial port reading function in another thread
@@ -115,7 +113,7 @@ class ViewController: NSViewController {
                 self.backgroundRead()
             }
 
-            DispatchQueue.global(qos: .userInitiated).async {
+            DispatchQueue.global(qos: .userInitiated).sync {
                 do {
                     self.waitForInput()
                 } catch {
@@ -134,13 +132,6 @@ class ViewController: NSViewController {
         didSet {
         // Update the view, if already loaded.
         }
-    }
-
-    override func viewDidDisappear() {
-        print("view did dissaper")
-        
-        serialPort.closePort()
-        print("Port Closed")
     }
 
 }
