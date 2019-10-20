@@ -12,15 +12,15 @@ import Cocoa
 class ViewController: NSViewController {
 
     @IBOutlet weak var inputTextField: NSTextField!
-    @IBOutlet weak var outputTextFiel: NSTextField!
-    @IBOutlet weak var debugTextField: NSTextFieldCell!
+    @IBOutlet weak var outputTextField: NSTextField!
+    @IBOutlet weak var debugTextField: NSTextField!
     
     //TODO: move to init()
     var serialPort:SerialPort = SerialPort(path: "")
     
     //TODO: Delete before release
     @IBAction func inputTextFieldDidEdited(_ sender: Any) {
-        outputTextFiel.stringValue = inputTextField.stringValue
+        outputTextField.stringValue = inputTextField.stringValue
     }
     
     @IBAction func ttysDidEdited(_ sender: Any) {
@@ -62,6 +62,7 @@ class ViewController: NSViewController {
                             let diff = currentInputText[currentInputText.index(before: currentInputText.endIndex)]
                             
                             do {
+                                print("will write \(diff)")
                                 var _ = try serialPort.writeChar(String(diff))
                             } catch PortError.failedToOpen {
                                 print("Serial port failed to open. You might need root permissions.")
@@ -83,7 +84,9 @@ class ViewController: NSViewController {
         while true{
             do{
                 let readCharacter = try serialPort.readChar()
-                self.outputTextFiel.stringValue += String(readCharacter)
+                DispatchQueue.main.async {
+                    self.outputTextField.stringValue += String(readCharacter)
+                }
             } catch {
                 print("Error: \(error) after read")
             }
@@ -97,7 +100,8 @@ class ViewController: NSViewController {
             print("Attempting to open port")
             try serialPort.openPort()
             print("Serial port opened successfully.")
-            outputTextFiel.stringValue = "sussesful"
+            outputTextField.stringValue = "sussesful"
+            inputTextField.stringValue = "sussesful"
             defer {
                 serialPort.closePort()
                 print("Port Closed")
@@ -114,11 +118,7 @@ class ViewController: NSViewController {
             }
 
             DispatchQueue.global(qos: .userInitiated).sync {
-                do {
                     self.waitForInput()
-                } catch {
-                    print("Error: \(error)")
-                }
             }
 
         } catch PortError.failedToOpen {

@@ -708,13 +708,13 @@
         <scene sceneID="hIz-AP-VOD">
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="SerialChat" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" placeholderIntrinsicWidth="300" placeholderIntrinsicHeight="450" translatesAutoresizingMaskIntoConstraints="NO" id="m2S-Jp-Qdl">
+                    <view key="view" translatesAutoresizingMaskIntoConstraints="NO" id="m2S-Jp-Qdl">
                         <rect key="frame" x="0.0" y="0.0" width="300" height="450"/>
                         <subviews>
                             <stackView distribution="fillEqually" orientation="vertical" alignment="leading" spacing="20" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bpj-te-O3D">
                                 <rect key="frame" x="20" y="20" width="260" height="410"/>
                                 <subviews>
-                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="7MD-52-oX1" userLabel="Named Text Field">
+                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="7MD-52-oX1" userLabel="Input Text Field">
                                         <rect key="frame" x="0.0" y="287" width="260" height="123"/>
                                         <subviews>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="a11-9Z-o62">
@@ -732,6 +732,9 @@
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 </textFieldCell>
+                                                <connections>
+                                                    <action selector="inputTextFieldDidEdited:" target="XfG-lQ-9wD" id="cHN-JI-kaF"/>
+                                                </connections>
                                             </textField>
                                         </subviews>
                                         <constraints>
@@ -744,7 +747,7 @@
                                             <constraint firstItem="NJn-tc-eeh" firstAttribute="top" secondItem="a11-9Z-o62" secondAttribute="bottom" constant="1" id="s4C-dv-dPr"/>
                                         </constraints>
                                     </customView>
-                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="fg1-P7-3ok" userLabel="Named Text Field">
+                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="fg1-P7-3ok" userLabel="Output Text Field">
                                         <rect key="frame" x="0.0" y="143" width="260" height="124"/>
                                         <subviews>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="f14-JX-uSP">
@@ -757,7 +760,7 @@
                                             </textField>
                                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="qNj-1W-NLb">
                                                 <rect key="frame" x="0.0" y="0.0" width="260" height="107"/>
-                                                <textFieldCell key="cell" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="sLv-jY-XuA">
+                                                <textFieldCell key="cell" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="sLv-jY-XuA">
                                                     <font key="font" metaFont="system"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -774,7 +777,7 @@
                                             <constraint firstAttribute="trailing" secondItem="qNj-1W-NLb" secondAttribute="trailing" id="ptZ-Xc-kyS"/>
                                         </constraints>
                                     </customView>
-                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="M18-yR-EUz" userLabel="Named Text Field">
+                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="M18-yR-EUz" userLabel="Debug Text Field">
                                         <rect key="frame" x="0.0" y="0.0" width="260" height="123"/>
                                         <subviews>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="7ae-GQ-5Iw">
@@ -792,6 +795,9 @@
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                 </textFieldCell>
+                                                <connections>
+                                                    <action selector="ttysDidEdited:" target="XfG-lQ-9wD" id="cES-pe-oY2"/>
+                                                </connections>
                                             </textField>
                                         </subviews>
                                         <constraints>
@@ -831,6 +837,11 @@
                             <constraint firstAttribute="bottom" secondItem="bpj-te-O3D" secondAttribute="bottom" constant="20" id="xfo-eU-G7R"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="debugTextField" destination="mPp-KY-Ju1" id="8ax-Ux-Yw9"/>
+                        <outlet property="inputTextField" destination="NJn-tc-eeh" id="xkq-IE-Itb"/>
+                        <outlet property="outputTextField" destination="qNj-1W-NLb" id="Pmc-8A-6gE"/>
+                    </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <stackView distribution="fill" orientation="vertical" alignment="leading" spacing="1" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" id="mwM-HX-43m">
