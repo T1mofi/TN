@@ -688,10 +688,10 @@
                     <window key="window" title="Serial Chat" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="SerialChatMainWindow" animationBehavior="default" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="196" y="240" width="300" height="450"/>
+                        <rect key="contentRect" x="196" y="240" width="400" height="600"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1027"/>
-                        <value key="minSize" type="size" width="300" height="450"/>
-                        <value key="maxSize" type="size" width="300" height="450"/>
+                        <value key="minSize" type="size" width="400" height="600"/>
+                        <value key="maxSize" type="size" width="400" height="600"/>
                         <connections>
                             <outlet property="delegate" destination="B8D-0N-5wS" id="98r-iN-zZc"/>
                         </connections>
@@ -709,16 +709,16 @@
             <objects>
                 <viewController id="XfG-lQ-9wD" customClass="ViewController" customModule="SerialChat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" translatesAutoresizingMaskIntoConstraints="NO" id="m2S-Jp-Qdl">
-                        <rect key="frame" x="0.0" y="0.0" width="300" height="450"/>
+                        <rect key="frame" x="0.0" y="0.0" width="400" height="600"/>
                         <subviews>
                             <stackView distribution="fillEqually" orientation="vertical" alignment="leading" spacing="20" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bpj-te-O3D">
-                                <rect key="frame" x="20" y="20" width="260" height="410"/>
+                                <rect key="frame" x="20" y="20" width="360" height="560"/>
                                 <subviews>
                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="7MD-52-oX1" userLabel="Input Text Field">
-                                        <rect key="frame" x="0.0" y="287" width="260" height="123"/>
+                                        <rect key="frame" x="0.0" y="387" width="360" height="173"/>
                                         <subviews>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="a11-9Z-o62">
-                                                <rect key="frame" x="-2" y="107" width="264" height="16"/>
+                                                <rect key="frame" x="-2" y="157" width="364" height="16"/>
                                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Input" id="MPf-TS-ArP">
                                                     <font key="font" usesAppearanceFont="YES"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -726,7 +726,7 @@
                                                 </textFieldCell>
                                             </textField>
                                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="NJn-tc-eeh">
-                                                <rect key="frame" x="0.0" y="0.0" width="260" height="106"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="360" height="156"/>
                                                 <textFieldCell key="cell" selectable="YES" editable="YES" enabled="NO" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="38V-Wf-joG">
                                                     <font key="font" metaFont="system"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -745,10 +745,10 @@
                                         </constraints>
                                     </customView>
                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="fg1-P7-3ok" userLabel="Output Text Field">
-                                        <rect key="frame" x="0.0" y="143" width="260" height="124"/>
+                                        <rect key="frame" x="0.0" y="193" width="360" height="174"/>
                                         <subviews>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="f14-JX-uSP">
-                                                <rect key="frame" x="-2" y="108" width="264" height="16"/>
+                                                <rect key="frame" x="-2" y="158" width="364" height="16"/>
                                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Output" id="ZS7-4x-DaU">
                                                     <font key="font" usesAppearanceFont="YES"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -756,7 +756,7 @@
                                                 </textFieldCell>
                                             </textField>
                                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="qNj-1W-NLb">
-                                                <rect key="frame" x="0.0" y="0.0" width="260" height="107"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="360" height="157"/>
                                                 <textFieldCell key="cell" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="sLv-jY-XuA">
                                                     <font key="font" metaFont="system"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -775,10 +775,10 @@
                                         </constraints>
                                     </customView>
                                     <customView translatesAutoresizingMaskIntoConstraints="NO" id="M18-yR-EUz" userLabel="Debug Text Field">
-                                        <rect key="frame" x="0.0" y="0.0" width="260" height="123"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="360" height="173"/>
                                         <subviews>
                                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="7ae-GQ-5Iw">
-                                                <rect key="frame" x="-2" y="107" width="264" height="16"/>
+                                                <rect key="frame" x="-2" y="157" width="364" height="16"/>
                                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Debug" id="b6i-Lv-Cyv">
                                                     <font key="font" usesAppearanceFont="YES"/>
                                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -786,7 +786,7 @@
                                                 </textFieldCell>
                                             </textField>
                                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="mPp-KY-Ju1">
-                                                <rect key="frame" x="0.0" y="0.0" width="260" height="106"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="360" height="156"/>
                                                 <textFieldCell key="cell" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="gTv-Pt-20y">
                                                     <font key="font" metaFont="system"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -827,10 +827,10 @@
                         </subviews>
                         <constraints>
                             <constraint firstItem="bpj-te-O3D" firstAttribute="leading" secondItem="m2S-Jp-Qdl" secondAttribute="leading" constant="20" id="JPu-3g-kVb"/>
-                            <constraint firstAttribute="width" constant="300" id="dHB-eT-Guu"/>
+                            <constraint firstAttribute="width" constant="400" id="dHB-eT-Guu"/>
                             <constraint firstItem="bpj-te-O3D" firstAttribute="top" secondItem="m2S-Jp-Qdl" secondAttribute="top" constant="20" id="l8R-Ep-RXS"/>
                             <constraint firstAttribute="trailing" secondItem="bpj-te-O3D" secondAttribute="trailing" constant="20" id="q7O-g7-Dot"/>
-                            <constraint firstAttribute="height" constant="450" id="xJt-4G-bcK"/>
+                            <constraint firstAttribute="height" constant="600" id="xJt-4G-bcK"/>
                             <constraint firstAttribute="bottom" secondItem="bpj-te-O3D" secondAttribute="bottom" constant="20" id="xfo-eU-G7R"/>
                         </constraints>
                     </view>
@@ -875,7 +875,7 @@
                     </customSpacing>
                 </stackView>
             </objects>
-            <point key="canvasLocation" x="75" y="881"/>
+            <point key="canvasLocation" x="75" y="956"/>
         </scene>
     </scenes>
 </document>
