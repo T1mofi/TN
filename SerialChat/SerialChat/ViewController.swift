@@ -10,20 +10,23 @@ import Cocoa
 //import SwiftSerial // https://github.com/yeokm1/SwiftSerial.git
 
 class ViewController: NSViewController {
+    
+    // MARK: IBOutlets
 
     @IBOutlet weak var inputTextField: NSTextField!
     @IBOutlet weak var outputTextField: NSTextField!
     @IBOutlet weak var debugTextField: NSTextField!
     
+    @IBOutlet weak var connectButton: NSButton!
+    
     //TODO: move to init()
     var serialPort:SerialPort = SerialPort(path: "")
     
-    @IBAction func ttysDidEdited(_ sender: Any) {
-        self.workWithPort()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    @IBAction func connectButtonClicked(_ sender: Any) {
+        self.workWithPort()
     }
     
     override func viewWillDisappear() {
@@ -46,8 +49,7 @@ class ViewController: NSViewController {
                                    minimumBytesToRead: 1)
             
             inputTextField.isEnabled = true
-            debugTextField.isEnabled = false
-            debugTextField.stringValue = "Connected to port"
+            debugTextField.stringValue = "Connected to port\n"
             
             
 
@@ -64,7 +66,7 @@ class ViewController: NSViewController {
         } catch PortError.failedToOpen {
             print("Serial port failed to open. You might need root permissions.")
             DispatchQueue.main.async {
-                self.debugTextField.stringValue = "Cannot connect to serial port"
+                self.debugTextField.stringValue += "Cannot connect to serial port\n\n"
             }
         } catch {
             print("Error: \(error)")
