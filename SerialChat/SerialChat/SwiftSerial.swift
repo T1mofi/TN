@@ -217,6 +217,7 @@ public class SerialPort {
 
     var path: String
     var fileDescriptor: Int32?
+    
 
     public init(path: String) {
         self.path = path
@@ -250,7 +251,8 @@ public class SerialPort {
     #if os(Linux)
         fileDescriptor = open(path, readWriteParam | O_NOCTTY)
     #elseif os(OSX)
-        fileDescriptor = open(path, readWriteParam | O_NOCTTY | O_EXLOCK)
+        // delete " | O_NOCTTY | O_EXLOCK"
+    fileDescriptor = open(path, readWriteParam | O_NOCTTY | O_EXLOCK |  O_NONBLOCK)
     #endif
 
         // Throw error if open() failed

@@ -18,52 +18,84 @@ class ViewController: NSViewController {
     //TODO: move to init()
     var serialPort:SerialPort = SerialPort(path: "")
     
-    //TODO: Delete before release
-    @IBAction func inputTextFieldDidEdited(_ sender: Any) {
-        outputTextField.stringValue = inputTextField.stringValue
-    }
-    
     @IBAction func ttysDidEdited(_ sender: Any) {
-        let serialPortName = "/dev/ttys00" + debugTextField.stringValue
-        serialPort = SerialPort(path: serialPortName)
-        
-        debugTextField.isEnabled = false
-        
-        //TODO: move to "when port is conected"
-        inputTextField.isEnabled = true
-        
-        DispatchQueue.global(qos: .userInteractive).async {
-            self.workWithPort()
-        }
+        self.workWithPort()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
     }
     
+    override func viewWillDisappear() {
+//        self.serialPort.closePort()
+//        print("Port should close")
+    }
+    
+    func workWithPort() {
+        
+        let serialPortName = "/dev/ttys00" + debugTextField.stringValue
+        
+        do {
+            
+            serialPort = SerialPort(path: serialPortName)
+            
+            print("Attempting to open porrt")
+            try serialPort.openPort()
+            serialPort.setSettings(receiveRate: .baud9600,
+                                   transmitRate: .baud9600,
+                                   minimumBytesToRead: 1)
+            
+            inputTextField.isEnabled = true
+            debugTextField.isEnabled = false
+            debugTextField.stringValue = "Connected to port"
+            
+            
+
+            //Run the serial port reading function in another thread
+            DispatchQueue.global(qos: .userInteractive).async {
+                self.backgroundRead()
+            }
+
+            //Run the serial port reading function in another thread
+            DispatchQueue.global(qos: .userInteractive).async {
+                self.waitForInput()
+            }
+
+        } catch PortError.failedToOpen {
+            print("Serial port failed to open. You might need root permissions.")
+            DispatchQueue.main.async {
+                self.debugTextField.stringValue = "Cannot connect to serial port"
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+        
+    }
+
+    
     func waitForInput() {
-        
+
         var tempInputText = self.inputTextField.stringValue
-        
+
         // Check for input in infinite loop
         while true {
-            
+
             DispatchQueue.main.sync {
                 let currentInputText = self.inputTextField.stringValue
-                
+
                 // If user input char in middle of string
                 let difference = zip(tempInputText, currentInputText).filter{ $0 != $1 }
                 if !difference.isEmpty {
                     self.inputTextField.stringValue = tempInputText
                 } else {
-                
+
                     if (tempInputText != currentInputText) {
                         if (currentInputText.count > tempInputText.count) {
                             let diff = currentInputText[currentInputText.index(before: currentInputText.endIndex)]
-                            
+
                             do {
                                 print("will write \(diff)")
-                                var _ = try serialPort.writeChar(String(diff))
+                                var _ = try self.serialPort.writeChar(String(diff))
                             } catch PortError.failedToOpen {
                                 print("Serial port failed to open. You might need root permissions.")
                             } catch {
@@ -72,14 +104,12 @@ class ViewController: NSViewController {
                         }
                         tempInputText = currentInputText
                     }
-                    
+
                 }
             }
-            
         }
-            
     }
-    
+
     func backgroundRead() {
         while true{
             do{
@@ -90,41 +120,6 @@ class ViewController: NSViewController {
             } catch {
                 print("Error: \(error) after read")
             }
-        }
-    }
-    
-    func workWithPort() {
-        
-        do {
-
-            print("Attempting to open port")
-            try serialPort.openPort()
-            print("Serial port opened successfully.")
-            outputTextField.stringValue = "sussesful"
-            inputTextField.stringValue = "sussesful"
-            defer {
-                serialPort.closePort()
-                print("Port Closed")
-            }
-
-            serialPort.setSettings(receiveRate: .baud9600,
-                                   transmitRate: .baud9600,
-                                   minimumBytesToRead: 1)
-
-
-            //Run the serial port reading function in another thread
-            DispatchQueue.global(qos: .userInitiated).async {
-                self.backgroundRead()
-            }
-
-            DispatchQueue.global(qos: .userInitiated).sync {
-                    self.waitForInput()
-            }
-
-        } catch PortError.failedToOpen {
-            print("Serial port failed to open. You might need root permissions.")
-        } catch {
-            print("Error: \(error)")
         }
     }
 
