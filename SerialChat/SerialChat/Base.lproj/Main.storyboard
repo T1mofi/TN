@@ -789,7 +789,7 @@
                                             </textField>
                                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="mPp-KY-Ju1">
                                                 <rect key="frame" x="0.0" y="0.0" width="160" height="263"/>
-                                                <textFieldCell key="cell" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="gTv-Pt-20y">
+                                                <textFieldCell key="cell" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" id="gTv-Pt-20y">
                                                     <font key="font" metaFont="system"/>
                                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -801,11 +801,48 @@
                                                     <stackView distribution="fillEqually" orientation="vertical" alignment="leading" spacing="17" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FS9-EG-oPK">
                                                         <rect key="frame" x="20" y="10" width="170" height="204"/>
                                                         <subviews>
-                                                            <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qXt-oQ-WLm" userLabel="Speed Stack">
+                                                            <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QFy-9k-TWk" userLabel="Port Stack">
                                                                 <rect key="frame" x="0.0" y="177" width="170" height="27"/>
                                                                 <subviews>
-                                                                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8HO-p0-PMJ">
+                                                                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="48X-me-Zj9">
                                                                         <rect key="frame" x="-2" y="9" width="94" height="16"/>
+                                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Port" id="Np1-fp-TNr">
+                                                                            <font key="font" usesAppearanceFont="YES"/>
+                                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                        </textFieldCell>
+                                                                    </textField>
+                                                                    <popUpButton horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hWR-ZV-ng7">
+                                                                        <rect key="frame" x="96" y="3" width="77" height="25"/>
+                                                                        <popUpButtonCell key="cell" type="push" title="COM1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="ICP-Md-eCa" id="izX-ac-pch">
+                                                                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                                                                            <font key="font" metaFont="system"/>
+                                                                            <menu key="menu" id="GmN-3F-mof">
+                                                                                <items>
+                                                                                    <menuItem title="COM1" state="on" id="ICP-Md-eCa" userLabel="COM1"/>
+                                                                                    <menuItem title="COM2" id="nTF-p7-oFQ" userLabel="COM2"/>
+                                                                                </items>
+                                                                            </menu>
+                                                                        </popUpButtonCell>
+                                                                    </popUpButton>
+                                                                </subviews>
+                                                                <constraints>
+                                                                    <constraint firstItem="48X-me-Zj9" firstAttribute="centerY" secondItem="hWR-ZV-ng7" secondAttribute="centerY" id="Hx3-Re-jNk"/>
+                                                                </constraints>
+                                                                <visibilityPriorities>
+                                                                    <integer value="1000"/>
+                                                                    <integer value="1000"/>
+                                                                </visibilityPriorities>
+                                                                <customSpacing>
+                                                                    <real value="3.4028234663852886e+38"/>
+                                                                    <real value="3.4028234663852886e+38"/>
+                                                                </customSpacing>
+                                                            </stackView>
+                                                            <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qXt-oQ-WLm" userLabel="Speed Stack">
+                                                                <rect key="frame" x="0.0" y="133" width="170" height="27"/>
+                                                                <subviews>
+                                                                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8HO-p0-PMJ">
+                                                                        <rect key="frame" x="-2" y="8" width="94" height="16"/>
                                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Speed" id="zrz-0n-IIY">
                                                                             <font key="font" usesAppearanceFont="YES"/>
                                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -829,44 +866,6 @@
                                                                 </subviews>
                                                                 <constraints>
                                                                     <constraint firstItem="8HO-p0-PMJ" firstAttribute="centerY" secondItem="gbV-l4-hm2" secondAttribute="centerY" id="aPB-oQ-xbT"/>
-                                                                </constraints>
-                                                                <visibilityPriorities>
-                                                                    <integer value="1000"/>
-                                                                    <integer value="1000"/>
-                                                                </visibilityPriorities>
-                                                                <customSpacing>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                    <real value="3.4028234663852886e+38"/>
-                                                                </customSpacing>
-                                                            </stackView>
-                                                            <stackView distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QFy-9k-TWk" userLabel="Port Stack">
-                                                                <rect key="frame" x="0.0" y="133" width="170" height="27"/>
-                                                                <subviews>
-                                                                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="48X-me-Zj9">
-                                                                        <rect key="frame" x="-2" y="8" width="94" height="16"/>
-                                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Port" id="Np1-fp-TNr">
-                                                                            <font key="font" usesAppearanceFont="YES"/>
-                                                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                                        </textFieldCell>
-                                                                    </textField>
-                                                                    <popUpButton horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hWR-ZV-ng7">
-                                                                        <rect key="frame" x="96" y="3" width="77" height="25"/>
-                                                                        <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="ICP-Md-eCa" id="izX-ac-pch">
-                                                                            <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                                                            <font key="font" metaFont="system"/>
-                                                                            <menu key="menu" id="GmN-3F-mof">
-                                                                                <items>
-                                                                                    <menuItem title="Item 1" state="on" id="ICP-Md-eCa"/>
-                                                                                    <menuItem title="Item 2" id="nTF-p7-oFQ"/>
-                                                                                    <menuItem title="Item 3" id="LWC-FU-bYc"/>
-                                                                                </items>
-                                                                            </menu>
-                                                                        </popUpButtonCell>
-                                                                    </popUpButton>
-                                                                </subviews>
-                                                                <constraints>
-                                                                    <constraint firstItem="48X-me-Zj9" firstAttribute="centerY" secondItem="hWR-ZV-ng7" secondAttribute="centerY" id="Hx3-Re-jNk"/>
                                                                 </constraints>
                                                                 <visibilityPriorities>
                                                                     <integer value="1000"/>
@@ -1083,8 +1082,10 @@
                     <connections>
                         <outlet property="connectButton" destination="lGz-LU-hSn" id="w5e-rl-VWP"/>
                         <outlet property="debugTextField" destination="mPp-KY-Ju1" id="8ax-Ux-Yw9"/>
+                        <outlet property="debugTextView" destination="mPp-KY-Ju1" id="4jm-hd-CIe"/>
                         <outlet property="inputTextField" destination="NJn-tc-eeh" id="xkq-IE-Itb"/>
                         <outlet property="outputTextField" destination="qNj-1W-NLb" id="Pmc-8A-6gE"/>
+                        <outlet property="portPopUpButton" destination="hWR-ZV-ng7" id="qg9-le-8WW"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

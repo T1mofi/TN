@@ -11,13 +11,19 @@ import Cocoa
 
 class ViewController: NSViewController {
     
-    // MARK: IBOutlets
+    // MARK: - IBOutlets
 
     @IBOutlet weak var inputTextField: NSTextField!
     @IBOutlet weak var outputTextField: NSTextField!
-    @IBOutlet weak var debugTextField: NSTextField!
+    @IBOutlet weak var debugTextView: NSTextField!
     
     @IBOutlet weak var connectButton: NSButton!
+    
+    @IBOutlet weak var portPopUpButton: NSPopUpButton!
+    
+    // MARK: - Properys
+    
+    var isConnectedToPort = false
     
     //TODO: move to init()
     var serialPort:SerialPort = SerialPort(path: "")
@@ -25,8 +31,15 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+    
+    // MARK: - IBOutlets
+    
     @IBAction func connectButtonClicked(_ sender: Any) {
-        self.workWithPort()
+        if isConnectedToPort == true{
+            disconnectFromPort()
+        } else {
+            workWithPort()
+        }
     }
     
     override func viewWillDisappear() {
@@ -34,22 +47,34 @@ class ViewController: NSViewController {
 //        print("Port should close")
     }
     
+    func disconnectFromPort() {
+        serialPort.closePort()
+        isConnectedToPort = false
+        inputTextField.isEnabled = false
+        connectButton.title = "Connect"
+        debugTextView.stringValue = "Disconnected\n\n" + self.debugTextView.stringValue
+    }
+    
     func workWithPort() {
         
-        let serialPortName = "/dev/ttys00" + debugTextField.stringValue
+        let portNumber = portPopUpButton.indexOfSelectedItem + 1
+        
+        let serialPortName = "/dev/ttys00" + String(portNumber)
         
         do {
             
             serialPort = SerialPort(path: serialPortName)
             
-            print("Attempting to open porrt")
+            print("Attempting to open port")
             try serialPort.openPort()
             serialPort.setSettings(receiveRate: .baud9600,
                                    transmitRate: .baud9600,
                                    minimumBytesToRead: 1)
             
             inputTextField.isEnabled = true
-            debugTextField.stringValue = "Connected to port\n"
+            isConnectedToPort = true
+            connectButton.title = "Disconnect"
+            debugTextView.stringValue = "Connected to port\n\n" + self.debugTextView.stringValue
             
             
 
@@ -66,7 +91,7 @@ class ViewController: NSViewController {
         } catch PortError.failedToOpen {
             print("Serial port failed to open. You might need root permissions.")
             DispatchQueue.main.async {
-                self.debugTextField.stringValue += "Cannot connect to serial port\n\n"
+                self.debugTextView.stringValue = "Cannot connect to serial port\n\n" + self.debugTextView.stringValue
             }
         } catch {
             print("Error: \(error)")
