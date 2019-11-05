@@ -64,7 +64,23 @@ class ViewController: NSViewController {
         if isConnectedToPort == true{
             disconnectFromPort()
         } else {
-            workWithPort()
+            guard connectToPort() == true else { return }
+            
+            //Run the serial port reading function in another thread
+            DispatchQueue.global(qos: .userInteractive).async {
+                self.backgroundRead()
+            }
+
+            //Run the serial port reading function in another thread
+            DispatchQueue.global(qos: .userInteractive).async {
+                self.waitForInput()
+            }
+            
+            inputTextField.isEnabled = true
+            isConnectedToPort = true
+            connectButton.title = "Disconnect"
+            debugTextView.stringValue = "Connected to port\n\n" + self.debugTextView.stringValue
+            toggleConnectionSettingsButtonsEnabling()
         }
     }
     
@@ -85,54 +101,34 @@ class ViewController: NSViewController {
         byteSizePopUpButton.isEnabled.toggle()
     }
     
-    func workWithPort() {
+    func connectToPort() -> Bool {
         
-        let portNumber = portPopUpButton.indexOfSelectedItem + 1
-        
-        let serialPortName = "/dev/ttys00" + String(portNumber)
+        guard isValidConnetionSettiongs == true else {
+            self.debugTextView.stringValue = "Cannot connect invalid connections settings\n\n" + self.debugTextView.stringValue
+            return false
+        }
         
         do {
+
+            let portNumber = portPopUpButton.indexOfSelectedItem + 4
+            
+            let serialPortName = "/dev/ttys00" + String(portNumber)
             
             serialPort = SerialPort(path: serialPortName)
             
-            guard isValidConnetionSettiongs == true else {
-                self.debugTextView.stringValue = "Cannot connect invalid connections settings\n\n" + self.debugTextView.stringValue
-                return
-            }
-            
-            print("Attempting to open port")
+            // Open and congugurate serial port
             try serialPort.openPort()
             serialPort.setSettings(receiveRate: .baud9600,
                                    transmitRate: .baud9600,
                                    minimumBytesToRead: 1)
-            
-            inputTextField.isEnabled = true
-            isConnectedToPort = true
-            connectButton.title = "Disconnect"
-            debugTextView.stringValue = "Connected to port\n\n" + self.debugTextView.stringValue
-            toggleConnectionSettingsButtonsEnabling()
-            
-            
-
-            //Run the serial port reading function in another thread
-            DispatchQueue.global(qos: .userInteractive).async {
-                self.backgroundRead()
-            }
-
-            //Run the serial port reading function in another thread
-            DispatchQueue.global(qos: .userInteractive).async {
-                self.waitForInput()
-            }
 
         } catch PortError.failedToOpen {
-            print("Serial port failed to open. You might need root permissions.")
-            DispatchQueue.main.async {
-                self.debugTextView.stringValue = "Cannot connect to serial port\n\n" + self.debugTextView.stringValue
-            }
+            self.debugTextView.stringValue = "Can't connect to serial port\n\n" + self.debugTextView.stringValue
         } catch {
             print("Error: \(error)")
         }
         
+        return true
     }
 
     
