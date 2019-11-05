@@ -29,6 +29,7 @@ class ViewController: NSViewController {
     // MARK: - Properies
     
     var isConnectedToPort = false
+    
     let speeds = ["1200", "2400", "4800", "9600", "19200", "38400", "57600", "115200"]
     
     var isValidConnetionSettiongs: Bool {
@@ -66,6 +67,8 @@ class ViewController: NSViewController {
         } else {
             guard connectToPort() == true else { return }
             
+            // TODO: Stop asyn tasks after disconnect
+            
             //Run the serial port reading function in another thread
             DispatchQueue.global(qos: .userInteractive).async {
                 self.backgroundRead()
@@ -75,8 +78,6 @@ class ViewController: NSViewController {
             DispatchQueue.global(qos: .userInteractive).async {
                 self.waitForInput()
             }
-            
-            isConnectedToPort = true
         }
         
         updateUI()
@@ -131,6 +132,8 @@ class ViewController: NSViewController {
             serialPort.setSettings(receiveRate: .baud9600,
                                    transmitRate: .baud9600,
                                    minimumBytesToRead: 1)
+            
+            isConnectedToPort = true
 
         } catch PortError.failedToOpen {
             self.debugTextView.stringValue = "Can't connect to serial port\n\n" + self.debugTextView.stringValue
@@ -144,56 +147,57 @@ class ViewController: NSViewController {
     
     func waitForInput() {
 
-        var tempInputText = self.inputTextField.stringValue
+        var inputTextString = self.inputTextField.stringValue
 
         // Check for input in infinite loop
-        while true {
+        while isConnectedToPort == true {
 
-            DispatchQueue.main.sync {
-                let currentInputText = self.inputTextField.stringValue
-
-                // If user input char in middle of string
-                let difference = zip(tempInputText, currentInputText).filter{ $0 != $1 }
-                if !difference.isEmpty {
-                    self.inputTextField.stringValue = tempInputText
-                } else {
-                    if (tempInputText != currentInputText) {
-                        
-                        // if there are new characters
-                        if (currentInputText.count > tempInputText.count) {
-                            
-                            let range = currentInputText.index(currentInputText.startIndex, offsetBy: tempInputText.count)..<currentInputText.endIndex
-                            let dff = currentInputText[range]
-                            print(dff)
-                            
-                            for diff in dff {
-                                
-                                if (diff >= "а") && (diff <= "я") || (diff >= "А") && (diff <= "Я") {
-                                    self.inputTextField.stringValue = tempInputText
-                                    print("Russian sumbols did not support")
-                                } else {
-                                    do {
-                                        print("will write \(diff)")
-                                        var _ = try self.serialPort.writeChar(String(diff))
-                                    } catch PortError.failedToOpen {
-                                        print("Serial port failed to open. You might need root permissions.")
-                                    } catch {
-                                        print("Error: \(error)")
-                                    }
-                                }
-                            }
             
-                        }
-                        tempInputText = currentInputText
-                    }
-
+                let newInputTextString = self.inputTextField.stringValue
+                
+                // If user input char in middle of string
+                let middleDifference = zip(inputTextString, newInputTextString).filter{ $0 != $1 }
+                
+                guard middleDifference.isEmpty else {
+                    self.inputTextField.stringValue = inputTextString
+                    continue
                 }
-            }
+            
+                guard newInputTextString.count > inputTextString.count else {
+                    continue
+                }
+            
+                // if there are new characters
+                let differenceRange = newInputTextString.index(newInputTextString.startIndex, offsetBy: inputTextString.count)..<newInputTextString.endIndex
+                let difference = newInputTextString[differenceRange]
+                print(difference)
+                
+                for symbol in difference {
+                    
+                    guard !(symbol >= "а") && (symbol <= "я") && !(symbol >= "А") && (symbol <= "Я") else {
+                        self.inputTextField.stringValue = inputTextString
+                        print("Russian sumbols did not support")
+                        continue
+                    }
+                
+                    do {
+                        print("will write \(symbol)")
+                        
+                        // TODO: Use writeString
+                        var _ = try self.serialPort.writeChar(String(symbol))
+                    } catch PortError.failedToOpen {
+                        print("Serial port failed to open. You might need root permissions.")
+                    } catch {
+                        print("Error: \(error)")
+                    }
+                }
+    
+                inputTextString = newInputTextString
         }
     }
 
     func backgroundRead() {
-        while true{
+        while isConnectedToPort == true {
             do{
                 let readCharacter = try serialPort.readChar()
                 DispatchQueue.main.async {
