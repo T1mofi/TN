@@ -842,7 +842,7 @@
                                                                 <rect key="frame" x="0.0" y="133" width="170" height="27"/>
                                                                 <subviews>
                                                                     <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8HO-p0-PMJ">
-                                                                        <rect key="frame" x="-2" y="8" width="94" height="16"/>
+                                                                        <rect key="frame" x="-2" y="8" width="133" height="16"/>
                                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Speed" id="zrz-0n-IIY">
                                                                             <font key="font" usesAppearanceFont="YES"/>
                                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -850,17 +850,11 @@
                                                                         </textFieldCell>
                                                                     </textField>
                                                                     <popUpButton horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gbV-l4-hm2">
-                                                                        <rect key="frame" x="96" y="3" width="77" height="25"/>
-                                                                        <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="Vl6-iu-pDn" id="WD5-pd-hKy">
+                                                                        <rect key="frame" x="135" y="3" width="38" height="25"/>
+                                                                        <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="WD5-pd-hKy">
                                                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                                             <font key="font" metaFont="system"/>
-                                                                            <menu key="menu" id="xMj-Xw-3ge">
-                                                                                <items>
-                                                                                    <menuItem title="Item 1" state="on" id="Vl6-iu-pDn"/>
-                                                                                    <menuItem title="Item 2" id="4IO-yj-d7A"/>
-                                                                                    <menuItem title="Item 3" id="ioZ-Do-Kov"/>
-                                                                                </items>
-                                                                            </menu>
+                                                                            <menu key="menu" id="xMj-Xw-3ge"/>
                                                                         </popUpButtonCell>
                                                                     </popUpButton>
                                                                 </subviews>
@@ -880,7 +874,7 @@
                                                                 <rect key="frame" x="0.0" y="88" width="170" height="28"/>
                                                                 <subviews>
                                                                     <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sdw-dx-0Vk">
-                                                                        <rect key="frame" x="-2" y="9" width="94" height="16"/>
+                                                                        <rect key="frame" x="-2" y="9" width="96" height="16"/>
                                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Parity" id="Afy-K7-LQo">
                                                                             <font key="font" usesAppearanceFont="YES"/>
                                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -888,15 +882,17 @@
                                                                         </textFieldCell>
                                                                     </textField>
                                                                     <popUpButton horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sgi-eL-B4k">
-                                                                        <rect key="frame" x="96" y="4" width="77" height="25"/>
-                                                                        <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="KvJ-Hy-QdE" id="TpT-ji-6bc">
+                                                                        <rect key="frame" x="98" y="4" width="75" height="25"/>
+                                                                        <popUpButtonCell key="cell" type="push" title="no" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="KvJ-Hy-QdE" id="TpT-ji-6bc">
                                                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                                             <font key="font" metaFont="system"/>
                                                                             <menu key="menu" id="Ei1-VD-FKJ">
                                                                                 <items>
-                                                                                    <menuItem title="Item 1" state="on" id="KvJ-Hy-QdE"/>
-                                                                                    <menuItem title="Item 2" id="bXi-PR-6kQ"/>
-                                                                                    <menuItem title="Item 3" id="UJa-Xp-74D"/>
+                                                                                    <menuItem title="no" state="on" id="KvJ-Hy-QdE"/>
+                                                                                    <menuItem title="odd" id="bXi-PR-6kQ"/>
+                                                                                    <menuItem title="even" id="UJa-Xp-74D"/>
+                                                                                    <menuItem title="mark" id="YGP-Bv-UGC"/>
+                                                                                    <menuItem title="space" id="ydn-9C-gMN"/>
                                                                                 </items>
                                                                             </menu>
                                                                         </popUpButtonCell>
@@ -918,7 +914,7 @@
                                                                 <rect key="frame" x="0.0" y="44" width="170" height="27"/>
                                                                 <subviews>
                                                                     <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="oz6-F4-jPx">
-                                                                        <rect key="frame" x="-2" y="9" width="94" height="16"/>
+                                                                        <rect key="frame" x="-2" y="9" width="115" height="16"/>
                                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Stop bits" id="RU2-lT-UG2">
                                                                             <font key="font" usesAppearanceFont="YES"/>
                                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -926,15 +922,15 @@
                                                                         </textFieldCell>
                                                                     </textField>
                                                                     <popUpButton horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="5Xu-cd-hJw">
-                                                                        <rect key="frame" x="96" y="3" width="77" height="25"/>
-                                                                        <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="KrA-9r-6Au" id="MwX-64-o1c">
+                                                                        <rect key="frame" x="117" y="3" width="56" height="25"/>
+                                                                        <popUpButtonCell key="cell" type="push" title="1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="KrA-9r-6Au" id="MwX-64-o1c">
                                                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                                             <font key="font" metaFont="system"/>
                                                                             <menu key="menu" id="lz5-fF-eca">
                                                                                 <items>
-                                                                                    <menuItem title="Item 1" state="on" id="KrA-9r-6Au"/>
-                                                                                    <menuItem title="Item 2" id="zFn-Nx-SWr"/>
-                                                                                    <menuItem title="Item 3" id="P9m-lU-1VQ"/>
+                                                                                    <menuItem title="1" state="on" id="KrA-9r-6Au"/>
+                                                                                    <menuItem title="1.5" id="zFn-Nx-SWr"/>
+                                                                                    <menuItem title="2" id="P9m-lU-1VQ"/>
                                                                                 </items>
                                                                             </menu>
                                                                         </popUpButtonCell>
@@ -956,7 +952,7 @@
                                                                 <rect key="frame" x="0.0" y="0.0" width="170" height="27"/>
                                                                 <subviews>
                                                                     <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ICV-nD-7bi">
-                                                                        <rect key="frame" x="-2" y="9" width="94" height="16"/>
+                                                                        <rect key="frame" x="-2" y="9" width="124" height="16"/>
                                                                         <textFieldCell key="cell" lineBreakMode="clipping" title="Byte size" id="mSp-yQ-A4c">
                                                                             <font key="font" usesAppearanceFont="YES"/>
                                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -964,15 +960,16 @@
                                                                         </textFieldCell>
                                                                     </textField>
                                                                     <popUpButton horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gdf-4K-oAU">
-                                                                        <rect key="frame" x="96" y="3" width="77" height="25"/>
-                                                                        <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="fTc-Kb-c2h" id="T4B-B1-sQG">
+                                                                        <rect key="frame" x="126" y="3" width="47" height="25"/>
+                                                                        <popUpButtonCell key="cell" type="push" title="5" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="fTc-Kb-c2h" id="T4B-B1-sQG">
                                                                             <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
                                                                             <font key="font" metaFont="system"/>
                                                                             <menu key="menu" id="KX3-FR-ma3">
                                                                                 <items>
-                                                                                    <menuItem title="Item 1" state="on" id="fTc-Kb-c2h"/>
-                                                                                    <menuItem title="Item 2" id="49m-ww-0Sk"/>
-                                                                                    <menuItem title="Item 3" id="JXf-C6-rks"/>
+                                                                                    <menuItem title="5" state="on" id="fTc-Kb-c2h"/>
+                                                                                    <menuItem title="6" id="49m-ww-0Sk"/>
+                                                                                    <menuItem title="7" id="JXf-C6-rks"/>
+                                                                                    <menuItem title="8" id="2Jp-UH-cxi"/>
                                                                                 </items>
                                                                             </menu>
                                                                         </popUpButtonCell>
@@ -1080,12 +1077,16 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="byteSizePopUpButton" destination="gdf-4K-oAU" id="JbP-Ak-Izg"/>
                         <outlet property="connectButton" destination="lGz-LU-hSn" id="w5e-rl-VWP"/>
                         <outlet property="debugTextField" destination="mPp-KY-Ju1" id="8ax-Ux-Yw9"/>
                         <outlet property="debugTextView" destination="mPp-KY-Ju1" id="4jm-hd-CIe"/>
                         <outlet property="inputTextField" destination="NJn-tc-eeh" id="xkq-IE-Itb"/>
                         <outlet property="outputTextField" destination="qNj-1W-NLb" id="Pmc-8A-6gE"/>
+                        <outlet property="parityPopUpButton" destination="sgi-eL-B4k" id="LoJ-Ee-7uv"/>
                         <outlet property="portPopUpButton" destination="hWR-ZV-ng7" id="qg9-le-8WW"/>
+                        <outlet property="speedPopUpButton" destination="gbV-l4-hm2" id="Y2S-m7-Qnp"/>
+                        <outlet property="stopBitsPopUpButton" destination="5Xu-cd-hJw" id="Iqh-zM-Toq"/>
                     </connections>
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>

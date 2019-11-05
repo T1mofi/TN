@@ -20,16 +20,42 @@ class ViewController: NSViewController {
     @IBOutlet weak var connectButton: NSButton!
     
     @IBOutlet weak var portPopUpButton: NSPopUpButton!
+    @IBOutlet weak var speedPopUpButton: NSPopUpButton!
+    @IBOutlet weak var parityPopUpButton: NSPopUpButton!
+    @IBOutlet weak var stopBitsPopUpButton: NSPopUpButton!
+    @IBOutlet weak var byteSizePopUpButton: NSPopUpButton!
     
-    // MARK: - Properys
+    
+    // MARK: - Properies
     
     var isConnectedToPort = false
+    let speeds = ["1200", "2400", "4800", "9600", "19200", "38400", "57600", "115200"]
+    
+    var isValidConnetionSettiongs: Bool {
+        let byteSize = Float(byteSizePopUpButton.itemTitle(at: byteSizePopUpButton.indexOfSelectedItem))
+        
+        let stopBits = Float(stopBitsPopUpButton.itemTitle(at: stopBitsPopUpButton.indexOfSelectedItem))
+        
+        if (byteSize == 5) && (stopBits == 2) {
+            return false
+        }
+        
+        if ((byteSize == 6) || (byteSize == 7) || (byteSize == 8)) && (stopBits == 1.5) {
+            return false
+        }
+        
+        return true
+    }
+                
     
     //TODO: move to init()
     var serialPort:SerialPort = SerialPort(path: "")
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        speedPopUpButton.addItems(withTitles: speeds)
+        speedPopUpButton.selectItem(at: 3)
     }
     
     // MARK: - IBOutlets
@@ -53,6 +79,15 @@ class ViewController: NSViewController {
         inputTextField.isEnabled = false
         connectButton.title = "Connect"
         debugTextView.stringValue = "Disconnected\n\n" + self.debugTextView.stringValue
+        toggleConnectionSettingsButtonsEnabling()
+    }
+    
+    func toggleConnectionSettingsButtonsEnabling() {
+        portPopUpButton.isEnabled.toggle()
+        speedPopUpButton.isEnabled.toggle()
+        parityPopUpButton.isEnabled.toggle()
+        stopBitsPopUpButton.isEnabled.toggle()
+        byteSizePopUpButton.isEnabled.toggle()
     }
     
     func workWithPort() {
@@ -65,6 +100,11 @@ class ViewController: NSViewController {
             
             serialPort = SerialPort(path: serialPortName)
             
+            guard isValidConnetionSettiongs == true else {
+                self.debugTextView.stringValue = "Cannot connect invalid connections settings\n\n" + self.debugTextView.stringValue
+                return
+            }
+            
             print("Attempting to open port")
             try serialPort.openPort()
             serialPort.setSettings(receiveRate: .baud9600,
@@ -75,6 +115,7 @@ class ViewController: NSViewController {
             isConnectedToPort = true
             connectButton.title = "Disconnect"
             debugTextView.stringValue = "Connected to port\n\n" + self.debugTextView.stringValue
+            toggleConnectionSettingsButtonsEnabling()
             
             
 
