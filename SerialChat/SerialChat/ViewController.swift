@@ -68,11 +68,6 @@ class ViewController: NSViewController {
         }
     }
     
-    override func viewWillDisappear() {
-//        self.serialPort.closePort()
-//        print("Port should close")
-    }
-    
     func disconnectFromPort() {
         serialPort.closePort()
         isConnectedToPort = false
@@ -156,10 +151,11 @@ class ViewController: NSViewController {
                 if !difference.isEmpty {
                     self.inputTextField.stringValue = tempInputText
                 } else {
-
                     if (tempInputText != currentInputText) {
+                        
+                        // if there are new characters
                         if (currentInputText.count > tempInputText.count) {
-                            //all range
+                            
                             let range = currentInputText.index(currentInputText.startIndex, offsetBy: tempInputText.count)..<currentInputText.endIndex
                             let dff = currentInputText[range]
                             print(dff)
