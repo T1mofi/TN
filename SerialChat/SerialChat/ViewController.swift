@@ -76,31 +76,41 @@ class ViewController: NSViewController {
                 self.waitForInput()
             }
             
-            inputTextField.isEnabled = true
             isConnectedToPort = true
+        }
+        
+        updateUI()
+    }
+    
+    // MARK: - UI Configuration
+    
+    func updateUI(){
+        if isConnectedToPort == true {
+            inputTextField.isEnabled = true
             connectButton.title = "Disconnect"
             debugTextView.stringValue = "Connected to port\n\n" + self.debugTextView.stringValue
-            toggleConnectionSettingsButtonsEnabling()
+            setConnectionSettingsButtonState(to: false)
+        } else {
+            inputTextField.isEnabled = false
+            connectButton.title = "Connect"
+            debugTextView.stringValue = "Disconnected\n\n" + self.debugTextView.stringValue
+            setConnectionSettingsButtonState(to: true)
         }
+    }
+    
+    func setConnectionSettingsButtonState(to state:Bool) {
+        portPopUpButton.isEnabled = state
+        speedPopUpButton.isEnabled = state
+        parityPopUpButton.isEnabled = state
+        stopBitsPopUpButton.isEnabled = state
+        byteSizePopUpButton.isEnabled = state
     }
     
     func disconnectFromPort() {
         serialPort.closePort()
         isConnectedToPort = false
-        inputTextField.isEnabled = false
-        connectButton.title = "Connect"
-        debugTextView.stringValue = "Disconnected\n\n" + self.debugTextView.stringValue
-        toggleConnectionSettingsButtonsEnabling()
     }
-    
-    func toggleConnectionSettingsButtonsEnabling() {
-        portPopUpButton.isEnabled.toggle()
-        speedPopUpButton.isEnabled.toggle()
-        parityPopUpButton.isEnabled.toggle()
-        stopBitsPopUpButton.isEnabled.toggle()
-        byteSizePopUpButton.isEnabled.toggle()
-    }
-    
+
     func connectToPort() -> Bool {
         
         guard isValidConnetionSettiongs == true else {
