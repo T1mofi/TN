@@ -107,6 +107,8 @@ class ViewController: NSViewController {
         byteSizePopUpButton.isEnabled = state
     }
     
+    // MARK: - Buisness logic
+    
     func disconnectFromPort() {
         serialPort.closePort()
         isConnectedToPort = false
@@ -144,55 +146,83 @@ class ViewController: NSViewController {
         return true
     }
 
+//    func getDifference(str:String, newStr:String) -> String {
+//        // If user input char in middle of string
+//        let middleDifference = zip(str, newStr).filter{ $0 != $1 }
+//        
+//        guard middleDifference.isEmpty else {
+//            return ""
+//        }
+//        
+//        guard str.count > newStr.count else {
+//            return ""
+//        }
+//        
+//        // if there are new characters
+//        let differenceRange = newStr.index(newStr.startIndex, offsetBy: str.count)..<newStr.endIndex
+//        let difference = String(newStr[differenceRange])
+//        
+//        return difference
+//    }
     
     func waitForInput() {
 
-        var inputTextString = self.inputTextField.stringValue
+        var inputTextString = ""
+        var newInputTextString = ""
+        
+        DispatchQueue.main.sync {
+            inputTextString = self.inputTextField.stringValue
+        }
 
         // Check for input in infinite loop
         while isConnectedToPort == true {
 
+            DispatchQueue.main.sync {
+                newInputTextString = self.inputTextField.stringValue
+            }
+
+            // If user input char in middle of string
+            let middleDifference = zip(inputTextString, newInputTextString).filter{ $0 != $1 }
             
-                let newInputTextString = self.inputTextField.stringValue
-                
-                // If user input char in middle of string
-                let middleDifference = zip(inputTextString, newInputTextString).filter{ $0 != $1 }
-                
-                guard middleDifference.isEmpty else {
+            guard middleDifference.isEmpty else {
+                DispatchQueue.main.sync {
                     self.inputTextField.stringValue = inputTextString
-                    continue
                 }
+                continue
+            }
+        
+            guard newInputTextString.count > inputTextString.count else {
+                continue
+            }
+        
+            // if there are new characters
+            let differenceRange = newInputTextString.index(newInputTextString.startIndex, offsetBy: inputTextString.count)..<newInputTextString.endIndex
+            let difference = newInputTextString[differenceRange]
+            print(difference)
             
-                guard newInputTextString.count > inputTextString.count else {
-                    continue
-                }
-            
-                // if there are new characters
-                let differenceRange = newInputTextString.index(newInputTextString.startIndex, offsetBy: inputTextString.count)..<newInputTextString.endIndex
-                let difference = newInputTextString[differenceRange]
-                print(difference)
+            for symbol in difference {
                 
-                for symbol in difference {
-                    
-                    guard !(symbol >= "а") && (symbol <= "я") && !(symbol >= "А") && (symbol <= "Я") else {
+                guard !(symbol >= "а") && (symbol <= "я") && !(symbol >= "А") && (symbol <= "Я") else {
+                    DispatchQueue.main.sync {
                         self.inputTextField.stringValue = inputTextString
-                        print("Russian sumbols did not support")
-                        continue
                     }
-                
-                    do {
-                        print("will write \(symbol)")
-                        
-                        // TODO: Use writeString
-                        var _ = try self.serialPort.writeChar(String(symbol))
-                    } catch PortError.failedToOpen {
-                        print("Serial port failed to open. You might need root permissions.")
-                    } catch {
-                        print("Error: \(error)")
-                    }
+                    print("Russian sumbols did not support")
+                    continue
                 }
-    
-                inputTextString = newInputTextString
+            
+                do {
+                    print("will write \(symbol)")
+                    
+                    // TODO: Use writeString
+                    var _ = try self.serialPort.writeChar(String(symbol))
+                } catch PortError.failedToOpen {
+                    print("Serial port failed to open. You might need root permissions.")
+                } catch {
+                    print("Error: \(error)")
+                }
+            }
+
+            inputTextString = newInputTextString
         }
     }
 
