@@ -164,21 +164,23 @@ class ViewController: NSViewController {
                             let dff = currentInputText[range]
                             print(dff)
                             
-                            let diff = currentInputText[currentInputText.index(before: currentInputText.endIndex)]
-                            
-                            if (diff >= "а") && (diff <= "я") || (diff >= "А") && (diff <= "Я") {
-                                self.inputTextField.stringValue = tempInputText
-                                print("Russian sumbols did not support")
-                            } else {
-                                do {
-                                    print("will write \(diff)")
-                                    var _ = try self.serialPort.writeChar(String(diff))
-                                } catch PortError.failedToOpen {
-                                    print("Serial port failed to open. You might need root permissions.")
-                                } catch {
-                                    print("Error: \(error)")
+                            for diff in dff {
+                                
+                                if (diff >= "а") && (diff <= "я") || (diff >= "А") && (diff <= "Я") {
+                                    self.inputTextField.stringValue = tempInputText
+                                    print("Russian sumbols did not support")
+                                } else {
+                                    do {
+                                        print("will write \(diff)")
+                                        var _ = try self.serialPort.writeChar(String(diff))
+                                    } catch PortError.failedToOpen {
+                                        print("Serial port failed to open. You might need root permissions.")
+                                    } catch {
+                                        print("Error: \(error)")
+                                    }
                                 }
                             }
+            
                         }
                         tempInputText = currentInputText
                     }
