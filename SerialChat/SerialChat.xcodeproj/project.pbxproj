@@ -11,6 +11,9 @@
 		07274AE3234FB75300DD7868 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07274AE2234FB75300DD7868 /* ViewController.swift */; };
 		07274AE5234FB75400DD7868 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 07274AE4234FB75400DD7868 /* Assets.xcassets */; };
 		07274AE8234FB75400DD7868 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 07274AE6234FB75400DD7868 /* Main.storyboard */; };
+		07B58221238811B600519DC6 /* ConnectionPropertyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B58220238811B600519DC6 /* ConnectionPropertyView.swift */; };
+		07B58223238811C500519DC6 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B58222238811C500519DC6 /* DebugView.swift */; };
+		07B58225238811D800519DC6 /* NamedTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B58224238811D800519DC6 /* NamedTextFieldView.swift */; };
 		07F170592351B84100CABC73 /* SwiftSerial.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F170582351B84100CABC73 /* SwiftSerial.swift */; };
 /* End PBXBuildFile section */
 
@@ -22,6 +25,9 @@
 		07274AE7234FB75400DD7868 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		07274AE9234FB75400DD7868 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		07274AEA234FB75400DD7868 /* SerialChat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SerialChat.entitlements; sourceTree = "<group>"; };
+		07B58220238811B600519DC6 /* ConnectionPropertyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionPropertyView.swift; sourceTree = "<group>"; };
+		07B58222238811C500519DC6 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
+		07B58224238811D800519DC6 /* NamedTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamedTextFieldView.swift; sourceTree = "<group>"; };
 		07F170582351B84100CABC73 /* SwiftSerial.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftSerial.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -62,6 +68,9 @@
 				07274AE6234FB75400DD7868 /* Main.storyboard */,
 				07274AE9234FB75400DD7868 /* Info.plist */,
 				07274AEA234FB75400DD7868 /* SerialChat.entitlements */,
+				07B58220238811B600519DC6 /* ConnectionPropertyView.swift */,
+				07B58222238811C500519DC6 /* DebugView.swift */,
+				07B58224238811D800519DC6 /* NamedTextFieldView.swift */,
 			);
 			path = SerialChat;
 			sourceTree = "<group>";
@@ -141,8 +150,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				07F170592351B84100CABC73 /* SwiftSerial.swift in Sources */,
+				07B58223238811C500519DC6 /* DebugView.swift in Sources */,
 				07274AE3234FB75300DD7868 /* ViewController.swift in Sources */,
 				07274AE1234FB75300DD7868 /* AppDelegate.swift in Sources */,
+				07B58225238811D800519DC6 /* NamedTextFieldView.swift in Sources */,
+				07B58221238811B600519DC6 /* ConnectionPropertyView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

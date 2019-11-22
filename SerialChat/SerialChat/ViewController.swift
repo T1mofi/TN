@@ -1,40 +1,67 @@
 //
 //  ViewController.swift
-//  SerialChat
+//  SerialChatUIThroughtCode
 //
-//  Created by Timofei Sikorski on 10/10/19.
-//  Copyright © 2019 SikorskiIT. All rights reserved.
+//  Created by Timofei Sikorski on 11/8/19.
+//  Copyright © 2019 Sikorski. All rights reserved.
 //
 
 import Cocoa
-//import SwiftSerial // https://github.com/yeokm1/SwiftSerial.git
 
-class ViewController: NSViewController {
+class ViewController: NSViewController, NSTextFieldDelegate {
     
-    // MARK: - IBOutlets
+    // MARK: - Views
+    
+    let rootStackView: NSStackView = {
+        let stackView = NSStackView()
 
-    @IBOutlet weak var inputTextField: NSTextField!
-    @IBOutlet weak var outputTextField: NSTextField!
-    @IBOutlet weak var debugTextView: NSTextField!
+        stackView.orientation = .vertical
+        stackView.distribution = .fillEqually
+        stackView.spacing = 20
+
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        return stackView
+    }()
     
-    @IBOutlet weak var connectButton: NSButton!
+    let inputView: NamedTextFieldView = {
+        let namedTextField = NamedTextFieldView(named: "Input", placeholder: "Write text here")
+        
+        namedTextField.translatesAutoresizingMaskIntoConstraints = false
+        
+        return namedTextField
+    }()
     
-    @IBOutlet weak var portPopUpButton: NSPopUpButton!
-    @IBOutlet weak var speedPopUpButton: NSPopUpButton!
-    @IBOutlet weak var parityPopUpButton: NSPopUpButton!
-    @IBOutlet weak var stopBitsPopUpButton: NSPopUpButton!
-    @IBOutlet weak var byteSizePopUpButton: NSPopUpButton!
+    let outputView: NamedTextFieldView = {
+        let namedTextField = NamedTextFieldView(named: "Output", placeholder: "")
+        
+        namedTextField.textField.isSelectable = false
+        
+        namedTextField.translatesAutoresizingMaskIntoConstraints = false
+        
+        return namedTextField
+    }()
     
+    let debugView: DebugView = {
+        let debugView = DebugView(named: "Debug", placeholder: "")
+        
+        debugView.textField.isSelectable = false
+        
+        debugView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return debugView
+    }()
     
     // MARK: - Properies
     
     var isConnectedToPort = false
-    
-    let speeds = ["1200", "2400", "4800", "9600", "19200", "38400", "57600", "115200"]
-    
+
     var isValidConnetionSettiongs: Bool {
+        
+        let byteSizePopUpButton = debugView.byteSizePropertyView.popUpButton
         let byteSize = Float(byteSizePopUpButton.itemTitle(at: byteSizePopUpButton.indexOfSelectedItem))
         
+        let stopBitsPopUpButton = debugView.stopBitsPropertyView.popUpButton
         let stopBits = Float(stopBitsPopUpButton.itemTitle(at: stopBitsPopUpButton.indexOfSelectedItem))
         
         if (byteSize == 5) && (stopBits == 2) {
@@ -48,20 +75,44 @@ class ViewController: NSViewController {
         return true
     }
                 
-    
     //TODO: move to init()
     var serialPort:SerialPort = SerialPort(path: "")
     
+    // MARK: - LifeCycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        speedPopUpButton.addItems(withTitles: speeds)
-        speedPopUpButton.selectItem(at: 3)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.heightAnchor.constraint(equalToConstant: 600).isActive = true
+        view.widthAnchor.constraint(equalToConstant: 450).isActive = true
+        
+        view.addSubview(rootStackView)
+        
+        autoLayoutRootStackView()
+        
+        rootStackView.addArrangedSubview(inputView)
+        rootStackView.addArrangedSubview(outputView)
+        rootStackView.addArrangedSubview(debugView)
+                
+        autoLayoutInputContainerView()
+        autoLayoutOutputContainerView()
+        autoLayoutDebugContainerView()
+        
+        
+        // Set Actions
+        debugView.connectButton.target = self
+        debugView.connectButton.action = #selector(ViewController.connecttButtonClicked)
+        
+        inputView.textField.delegate = self
     }
     
-    // MARK: - IBOutlets
+    // MARK: - Actions
     
-    @IBAction func connectButtonClicked(_ sender: Any) {
+    @objc func connecttButtonClicked() {
+        print("connectingVC")
+        
         if isConnectedToPort == true{
             disconnectFromPort()
         } else {
@@ -83,28 +134,33 @@ class ViewController: NSViewController {
         updateUI()
     }
     
+    // TextField delegate method
+    func controlTextDidChange(_ obj: Notification) {
+        print("controlTextDidChangeVC")
+    }
+    
     // MARK: - UI Configuration
     
     func updateUI(){
         if isConnectedToPort == true {
-            inputTextField.isEnabled = true
-            connectButton.title = "Disconnect"
-            debugTextView.stringValue = "Connected to port\n\n" + self.debugTextView.stringValue
+            inputView.textField.isEnabled = true
+            debugView.connectButton.title = "Disconnect"
+            debugView.textField.stringValue = "Connected to port\n\n" + self.debugView.textField.stringValue
             setConnectionSettingsButtonState(to: false)
         } else {
-            inputTextField.isEnabled = false
-            connectButton.title = "Connect"
-            debugTextView.stringValue = "Disconnected\n\n" + self.debugTextView.stringValue
+            inputView.textField.isEnabled = false
+            debugView.connectButton.title = "Connect"
+            debugView.textField.stringValue = "Disconnected\n\n" + self.debugView.textField.stringValue
             setConnectionSettingsButtonState(to: true)
         }
     }
     
     func setConnectionSettingsButtonState(to state:Bool) {
-        portPopUpButton.isEnabled = state
-        speedPopUpButton.isEnabled = state
-        parityPopUpButton.isEnabled = state
-        stopBitsPopUpButton.isEnabled = state
-        byteSizePopUpButton.isEnabled = state
+        debugView.portPropertyView.popUpButton.isEnabled = state
+        debugView.speedPropertyView.popUpButton.isEnabled = state
+        debugView.parityPropertyView.popUpButton.isEnabled = state
+        debugView.stopBitsPropertyView.popUpButton.isEnabled = state
+        debugView.byteSizePropertyView.popUpButton.isEnabled = state
     }
     
     // MARK: - Buisness logic
@@ -113,17 +169,17 @@ class ViewController: NSViewController {
         serialPort.closePort()
         isConnectedToPort = false
     }
-
+    
     func connectToPort() -> Bool {
         
         guard isValidConnetionSettiongs == true else {
-            self.debugTextView.stringValue = "Cannot connect invalid connections settings\n\n" + self.debugTextView.stringValue
+            self.debugView.textField.stringValue = "Cannot connect invalid connections settings\n\n" + self.debugView.textField.stringValue
             return false
         }
         
         do {
 
-            let portNumber = portPopUpButton.indexOfSelectedItem + 4
+            let portNumber = debugView.portPropertyView.popUpButton.indexOfSelectedItem + 0
             
             let serialPortName = "/dev/ttys00" + String(portNumber)
             
@@ -138,32 +194,13 @@ class ViewController: NSViewController {
             isConnectedToPort = true
 
         } catch PortError.failedToOpen {
-            self.debugTextView.stringValue = "Can't connect to serial port\n\n" + self.debugTextView.stringValue
+            self.debugView.textField.stringValue = "Can't connect to serial port\n\n" + self.debugView.textField.stringValue
         } catch {
             print("Error: \(error)")
         }
         
         return true
     }
-
-//    func getDifference(str:String, newStr:String) -> String {
-//        // If user input char in middle of string
-//        let middleDifference = zip(str, newStr).filter{ $0 != $1 }
-//        
-//        guard middleDifference.isEmpty else {
-//            return ""
-//        }
-//        
-//        guard str.count > newStr.count else {
-//            return ""
-//        }
-//        
-//        // if there are new characters
-//        let differenceRange = newStr.index(newStr.startIndex, offsetBy: str.count)..<newStr.endIndex
-//        let difference = String(newStr[differenceRange])
-//        
-//        return difference
-//    }
     
     func waitForInput() {
 
@@ -171,14 +208,14 @@ class ViewController: NSViewController {
         var newInputTextString = ""
         
         DispatchQueue.main.sync {
-            inputTextString = self.inputTextField.stringValue
+            inputTextString = self.inputView.textField.stringValue
         }
 
         // Check for input in infinite loop
         while isConnectedToPort == true {
 
             DispatchQueue.main.sync {
-                newInputTextString = self.inputTextField.stringValue
+                newInputTextString = self.inputView.textField.stringValue
             }
 
             // If user input char in middle of string
@@ -186,7 +223,7 @@ class ViewController: NSViewController {
             
             guard middleDifference.isEmpty else {
                 DispatchQueue.main.sync {
-                    self.inputTextField.stringValue = inputTextString
+                    self.inputView.textField.stringValue = inputTextString
                 }
                 continue
             }
@@ -204,7 +241,7 @@ class ViewController: NSViewController {
                 
                 guard !(symbol >= "а") && (symbol <= "я") && !(symbol >= "А") && (symbol <= "Я") else {
                     DispatchQueue.main.sync {
-                        self.inputTextField.stringValue = inputTextString
+                        self.inputView.textField.stringValue = inputTextString
                     }
                     print("Russian sumbols did not support")
                     continue
@@ -225,13 +262,13 @@ class ViewController: NSViewController {
             inputTextString = newInputTextString
         }
     }
-
+    
     func backgroundRead() {
         while isConnectedToPort == true {
             do{
                 let readCharacter = try serialPort.readChar()
                 DispatchQueue.main.async {
-                    self.outputTextField.stringValue += String(readCharacter)
+                    self.outputView.textField.stringValue += String(readCharacter)
                 }
             } catch {
                 print("Error: \(error) after read")
@@ -239,11 +276,37 @@ class ViewController: NSViewController {
         }
     }
 
+    
+
     override var representedObject: Any? {
         didSet {
         // Update the view, if already loaded.
         }
     }
-
+    
+    // MARK: - AutoLayout
+    
+    private func autoLayoutInputContainerView() {
+        inputView.widthAnchor.constraint(equalTo: rootStackView.widthAnchor).isActive = true
+    }
+    
+    private func autoLayoutOutputContainerView() {
+        outputView.widthAnchor.constraint(equalTo: rootStackView.widthAnchor).isActive = true
+    }
+    
+    private func autoLayoutDebugContainerView() {
+        debugView.heightAnchor.constraint(equalToConstant: 280).isActive = true
+        debugView.widthAnchor.constraint(equalTo: rootStackView.widthAnchor).isActive = true
+    }
+    
+    fileprivate func extractedFunc() {
+        rootStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -20).isActive = true
+        rootStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20).isActive = true
+    }
+    
+    private func autoLayoutRootStackView() {
+        rootStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
+        rootStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 20).isActive = true
+        extractedFunc()
+    }
 }
-
