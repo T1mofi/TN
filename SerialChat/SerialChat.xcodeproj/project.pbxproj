@@ -61,18 +61,66 @@
 		07274ADF234FB75300DD7868 /* SerialChat */ = {
 			isa = PBXGroup;
 			children = (
-				07F170582351B84100CABC73 /* SwiftSerial.swift */,
-				07274AE0234FB75300DD7868 /* AppDelegate.swift */,
-				07274AE2234FB75300DD7868 /* ViewController.swift */,
+				07B582262388147200519DC6 /* Model */,
+				07B582272388147C00519DC6 /* View */,
+				07B582282388148700519DC6 /* Controller */,
+				07B5822A2388149700519DC6 /* Librarys */,
+				07B582292388148F00519DC6 /* Singletones */,
 				07274AE4234FB75400DD7868 /* Assets.xcassets */,
-				07274AE6234FB75400DD7868 /* Main.storyboard */,
 				07274AE9234FB75400DD7868 /* Info.plist */,
 				07274AEA234FB75400DD7868 /* SerialChat.entitlements */,
+			);
+			path = SerialChat;
+			sourceTree = "<group>";
+		};
+		07B582262388147200519DC6 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		07B582272388147C00519DC6 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				07EC9712238D0F8E00B12A47 /* Storyboards */,
 				07B58220238811B600519DC6 /* ConnectionPropertyView.swift */,
 				07B58222238811C500519DC6 /* DebugView.swift */,
 				07B58224238811D800519DC6 /* NamedTextFieldView.swift */,
 			);
-			path = SerialChat;
+			path = View;
+			sourceTree = "<group>";
+		};
+		07B582282388148700519DC6 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				07274AE2234FB75300DD7868 /* ViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		07B582292388148F00519DC6 /* Singletones */ = {
+			isa = PBXGroup;
+			children = (
+				07274AE0234FB75300DD7868 /* AppDelegate.swift */,
+			);
+			path = Singletones;
+			sourceTree = "<group>";
+		};
+		07B5822A2388149700519DC6 /* Librarys */ = {
+			isa = PBXGroup;
+			children = (
+				07F170582351B84100CABC73 /* SwiftSerial.swift */,
+			);
+			path = Librarys;
+			sourceTree = "<group>";
+		};
+		07EC9712238D0F8E00B12A47 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				07274AE6234FB75400DD7868 /* Main.storyboard */,
+			);
+			path = Storyboards;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

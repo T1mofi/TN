@@ -309,4 +309,5 @@ class ViewController: NSViewController, NSTextFieldDelegate {
         rootStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 20).isActive = true
         extractedFunc()
     }
+    
 }
