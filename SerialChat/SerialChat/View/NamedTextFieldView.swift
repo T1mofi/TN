@@ -34,7 +34,6 @@ class NamedTextFieldView: NSView {
     
     override func updateConstraints() {
         if shouldSetupConstraints == true {
-
             label.translatesAutoresizingMaskIntoConstraints = false
             label.topAnchor.constraint(equalTo: self.topAnchor, constant: 3).isActive = true
             label.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 3).isActive = true
