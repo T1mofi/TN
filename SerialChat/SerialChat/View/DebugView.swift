@@ -22,10 +22,15 @@ class DebugView: NSView, NSTextFieldDelegate {
     var textField: NSTextField = {
         let textField = NSTextField(string: "")
         
+        textField.cell?.wraps = true
+        
         textField.translatesAutoresizingMaskIntoConstraints = false
         
         return textField
     }()
+    
+    // Nuber of printed mesages to debug view
+    var messageNumber = 0
     
     var optionsStackView: NSStackView = {
         let stackView = NSStackView()
@@ -125,7 +130,7 @@ class DebugView: NSView, NSTextFieldDelegate {
             textField.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
             textField.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
             
-            optionsStackView.widthAnchor.constraint(equalToConstant: 200).isActive = true
+            optionsStackView.widthAnchor.constraint(equalToConstant: 180).isActive = true
             optionsStackView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 5).isActive = true
             optionsStackView.leadingAnchor.constraint(equalTo: textField.trailingAnchor, constant: 20).isActive = true
             optionsStackView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10).isActive = true
@@ -137,6 +142,11 @@ class DebugView: NSView, NSTextFieldDelegate {
         }
 
         super.updateConstraints()
+    }
+    
+    func print(message: String) {
+        messageNumber += 1
+        textField.stringValue = "\(messageNumber): " + message + "\n\n" + textField.stringValue
     }
 
     override func draw(_ dirtyRect: NSRect) { super.draw(dirtyRect) }

@@ -12,7 +12,7 @@ class NamedTextFieldView: NSView {
     var shouldSetupConstraints = true
 
     var label = NSTextField(labelWithString: "Label name")
-    var textField = NSTextField(wrappingLabelWithString: "")
+    var textField = NSTextField(string: "")
     
     init(named labelText: String, placeholder: String) {
         super.init(frame: CGRect.zero)
@@ -20,9 +20,7 @@ class NamedTextFieldView: NSView {
         label.stringValue = labelText
         textField.placeholderString = placeholder
         
-        textField.isEditable = true
-        textField.wantsLayer = true
-        textField.layer?.backgroundColor = .init(gray: 0.18, alpha: 1)
+        textField.cell?.wraps = true
 
         self.addSubview(label)
         self.addSubview(textField)
@@ -34,7 +32,6 @@ class NamedTextFieldView: NSView {
     
     override func updateConstraints() {
         if shouldSetupConstraints == true {
-
             label.translatesAutoresizingMaskIntoConstraints = false
             label.topAnchor.constraint(equalTo: self.topAnchor, constant: 3).isActive = true
             label.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 3).isActive = true

@@ -8,8 +8,7 @@
 
 import Cocoa
 
-class ViewController: NSViewController, NSTextFieldDelegate {
-    
+class ViewController: NSViewController {
     // MARK: - Views
     let rootStackView: NSStackView = {
         let stackView = NSStackView()
@@ -26,9 +25,9 @@ class ViewController: NSViewController, NSTextFieldDelegate {
     let inputView: NamedTextFieldView = {
         let namedTextField = NamedTextFieldView(named: "Input", placeholder: "Write text here")
         
-        namedTextField.translatesAutoresizingMaskIntoConstraints = false
-        
         namedTextField.textField.isEnabled = false
+        
+        namedTextField.translatesAutoresizingMaskIntoConstraints = false
         
         return namedTextField
     }()
@@ -57,7 +56,6 @@ class ViewController: NSViewController, NSTextFieldDelegate {
     var isConnectedToPort = false
 
     var isValidConnetionSettiongs: Bool {
-        
         let byteSizePopUpButton = debugView.byteSizePropertyView.popUpButton
         let byteSize = Float(byteSizePopUpButton.itemTitle(at: byteSizePopUpButton.indexOfSelectedItem))
         
@@ -98,68 +96,22 @@ class ViewController: NSViewController, NSTextFieldDelegate {
         autoLayoutOutputContainerView()
         autoLayoutDebugContainerView()
         
-        
         // Set Actions
         debugView.connectButton.target = self
-        debugView.connectButton.action = #selector(ViewController.connecttButtonClicked)
+        debugView.connectButton.action = #selector(ViewController.connectButtonClicked)
         
         inputView.textField.delegate = self
     }
-    
-    // MARK: - Actions
-    @objc func connecttButtonClicked() {
-        print("connectingVC")
-        
-        if isConnectedToPort == true{
-            disconnectFromPort()
-        } else {
-            guard connectToPort() == true else { return }
-            
-            // TODO: Stop asyn tasks after disconnect
-            
-            //Run the serial port reading function in another thread
-            DispatchQueue.global(qos: .userInteractive).async {
-                self.backgroundRead()
-            }
 
-            //Run the serial port reading function in another thread
-            DispatchQueue.global(qos: .userInteractive).async {
-                self.waitForInput()
-            }
-        }
-        
-        updateUI()
-    }
-    
-    // TextField delegate method
-    func controlTextDidChange(_ obj: Notification) {
-        print("controlTextDidChangeVC")
-    }
-    
-    // MARK: - UI Configuration
-    func updateUI(){
-        if isConnectedToPort == true {
-            inputView.textField.isEnabled = true
-            debugView.connectButton.title = "Disconnect"
-            debugView.textField.stringValue = "Connected to port\n\n" + self.debugView.textField.stringValue
-            setConnectionSettingsButtonState(to: false)
-        } else {
-            inputView.textField.isEnabled = false
-            debugView.connectButton.title = "Connect"
-            debugView.textField.stringValue = "Disconnected\n\n" + self.debugView.textField.stringValue
-            setConnectionSettingsButtonState(to: true)
+    override var representedObject: Any? {
+        didSet {
+        // Update the view, if already loaded.
         }
     }
-    
-    func setConnectionSettingsButtonState(to state:Bool) {
-        debugView.portPropertyView.popUpButton.isEnabled = state
-        debugView.speedPropertyView.popUpButton.isEnabled = state
-        debugView.parityPropertyView.popUpButton.isEnabled = state
-        debugView.stopBitsPropertyView.popUpButton.isEnabled = state
-        debugView.byteSizePropertyView.popUpButton.isEnabled = state
-    }
-    
-    // MARK: - Buisness logic
+}
+
+// MARK: - Private methods
+fileprivate extension ViewController {
     func disconnectFromPort() {
         serialPort.closePort()
         isConnectedToPort = false
@@ -168,12 +120,12 @@ class ViewController: NSViewController, NSTextFieldDelegate {
     func connectToPort() -> Bool {
         
         guard isValidConnetionSettiongs == true else {
-            self.debugView.textField.stringValue = "Cannot connect invalid connections settings\n\n" + self.debugView.textField.stringValue
+            self.debugView.print(message: "Cannot connect invalid connections settings")
             return false
         }
         
         do {
-            let portNumber = debugView.portPropertyView.popUpButton.indexOfSelectedItem + 0
+            let portNumber = debugView.portPropertyView.popUpButton.indexOfSelectedItem + 2
             
             let serialPortName = "/dev/ttys00" + String(portNumber)
             
@@ -185,7 +137,7 @@ class ViewController: NSViewController, NSTextFieldDelegate {
             
             isConnectedToPort = true
         } catch PortError.failedToOpen {
-            self.debugView.textField.stringValue = "Can't connect to serial port\n\n" + self.debugView.textField.stringValue
+            debugView.print(message: "Can't connect to serial port")
         } catch {
             print("Error: \(error)")
         }
@@ -218,6 +170,7 @@ class ViewController: NSViewController, NSTextFieldDelegate {
             }
         
             guard newInputTextString.count > inputTextString.count else {
+                inputTextString = newInputTextString
                 continue
             }
         
@@ -231,13 +184,10 @@ class ViewController: NSViewController, NSTextFieldDelegate {
                     DispatchQueue.main.sync {
                         self.inputView.textField.stringValue = inputTextString
                     }
-                    print("Russian sumbols did not support")
                     continue
                 }
             
                 do {
-                    print("will write \(symbol)")
-                    
                     // TODO: Use writeString
                     var _ = try self.serialPort.writeChar(String(symbol))
                 } catch PortError.failedToOpen {
@@ -263,35 +213,84 @@ class ViewController: NSViewController, NSTextFieldDelegate {
             }
         }
     }
+}
 
-    override var representedObject: Any? {
-        didSet {
-        // Update the view, if already loaded.
+// MARK: - NSTextFieldDelegate
+extension ViewController: NSTextFieldDelegate {
+    func controlTextDidChange(_ obj: Notification) {
+        print("controlTextDidChangeVC")
+    }
+}
+
+// MARK: - Actions
+extension ViewController {
+    @objc func connectButtonClicked() {
+        if isConnectedToPort == true{
+            disconnectFromPort()
+        } else {
+            guard connectToPort() == true else { return }
+            
+            // TODO: Stop asyn tasks after disconnect
+            
+            //Run the serial port reading function in another thread
+            DispatchQueue.global(qos: .userInteractive).async {
+                self.backgroundRead()
+            }
+
+            //Run the serial port reading function in another thread
+            DispatchQueue.global(qos: .userInteractive).async {
+                self.waitForInput()
+            }
+        }
+        
+        updateUI()
+    }
+}
+
+// MARK: - UI Configuration
+fileprivate extension ViewController {
+    func updateUI(){
+        if isConnectedToPort == true {
+            inputView.textField.isEnabled = true
+            debugView.connectButton.title = "Disconnect"
+            debugView.print(message: "Connected to port")
+            setConnectionSettingsButtonState(to: false)
+        } else {
+            inputView.textField.isEnabled = false
+            debugView.connectButton.title = "Connect"
+            debugView.print(message: "Disconnected")
+            setConnectionSettingsButtonState(to: true)
         }
     }
     
-    // MARK: - AutoLayout
-    private func autoLayoutInputContainerView() {
+    func setConnectionSettingsButtonState(to state:Bool) {
+        debugView.portPropertyView.popUpButton.isEnabled = state
+        debugView.speedPropertyView.popUpButton.isEnabled = state
+        debugView.parityPropertyView.popUpButton.isEnabled = state
+        debugView.stopBitsPropertyView.popUpButton.isEnabled = state
+        debugView.byteSizePropertyView.popUpButton.isEnabled = state
+    }
+}
+
+// MARK: - AutoLayout
+fileprivate extension ViewController {
+    func autoLayoutInputContainerView() {
         inputView.widthAnchor.constraint(equalTo: rootStackView.widthAnchor).isActive = true
     }
     
-    private func autoLayoutOutputContainerView() {
+    func autoLayoutOutputContainerView() {
         outputView.widthAnchor.constraint(equalTo: rootStackView.widthAnchor).isActive = true
     }
     
-    private func autoLayoutDebugContainerView() {
+    func autoLayoutDebugContainerView() {
         debugView.heightAnchor.constraint(equalToConstant: 280).isActive = true
         debugView.widthAnchor.constraint(equalTo: rootStackView.widthAnchor).isActive = true
     }
-    
-    fileprivate func extractedFunc() {
-        rootStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -20).isActive = true
-        rootStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20).isActive = true
-    }
-    
-    private func autoLayoutRootStackView() {
+
+    func autoLayoutRootStackView() {
         rootStackView.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
         rootStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 20).isActive = true
-        extractedFunc()
+        rootStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -20).isActive = true
+        rootStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20).isActive = true
     }
 }
