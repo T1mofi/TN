@@ -9,7 +9,6 @@
 import Cocoa
 
 class DebugView: NSView, NSTextFieldDelegate {
-
     var shouldSetupConstraints = true
     
     var label: NSTextField = {
@@ -78,21 +77,20 @@ class DebugView: NSView, NSTextFieldDelegate {
     }()
     
     var stopBitsPropertyView: ConnectionPropertyView = {
-           let connectionPropertyView = ConnectionPropertyView(named: "Stop bits", propertys: ["1", "1.5", "2"])
-           
-           connectionPropertyView.translatesAutoresizingMaskIntoConstraints = false
-           
-           return connectionPropertyView
+       let connectionPropertyView = ConnectionPropertyView(named: "Stop bits", propertys: ["1", "1.5", "2"])
+       
+       connectionPropertyView.translatesAutoresizingMaskIntoConstraints = false
+       
+       return connectionPropertyView
     }()
     
     var byteSizePropertyView: ConnectionPropertyView = {
-           let connectionPropertyView = ConnectionPropertyView(named: "Byte size", propertys: ["5", "6", "7", "8"])
-           
-           connectionPropertyView.translatesAutoresizingMaskIntoConstraints = false
-           
-           return connectionPropertyView
+       let connectionPropertyView = ConnectionPropertyView(named: "Byte size", propertys: ["5", "6", "7", "8"])
+       
+       connectionPropertyView.translatesAutoresizingMaskIntoConstraints = false
+       
+       return connectionPropertyView
     }()
-    
     
     init(named labelText: String, placeholder: String) {
         super.init(frame: CGRect.zero)
@@ -109,7 +107,6 @@ class DebugView: NSView, NSTextFieldDelegate {
         optionsStackView.addArrangedSubview(parityPropertyView)
         optionsStackView.addArrangedSubview(stopBitsPropertyView)
         optionsStackView.addArrangedSubview(byteSizePropertyView)
-        
     }
 
     required init?(coder: NSCoder) {
@@ -142,10 +139,5 @@ class DebugView: NSView, NSTextFieldDelegate {
         super.updateConstraints()
     }
 
-    override func draw(_ dirtyRect: NSRect) {
-        super.draw(dirtyRect)
-
-        // Drawing code here.
-    }
-    
+    override func draw(_ dirtyRect: NSRect) { super.draw(dirtyRect) }
 }

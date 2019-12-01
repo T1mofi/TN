@@ -11,7 +11,6 @@ import Cocoa
 class ViewController: NSViewController, NSTextFieldDelegate {
     
     // MARK: - Views
-    
     let rootStackView: NSStackView = {
         let stackView = NSStackView()
 
@@ -28,6 +27,8 @@ class ViewController: NSViewController, NSTextFieldDelegate {
         let namedTextField = NamedTextFieldView(named: "Input", placeholder: "Write text here")
         
         namedTextField.translatesAutoresizingMaskIntoConstraints = false
+        
+        namedTextField.textField.isEnabled = false
         
         return namedTextField
     }()
@@ -53,7 +54,6 @@ class ViewController: NSViewController, NSTextFieldDelegate {
     }()
     
     // MARK: - Properies
-    
     var isConnectedToPort = false
 
     var isValidConnetionSettiongs: Bool {
@@ -75,11 +75,9 @@ class ViewController: NSViewController, NSTextFieldDelegate {
         return true
     }
                 
-    //TODO: move to init()
     var serialPort:SerialPort = SerialPort(path: "")
     
     // MARK: - LifeCycle
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -109,7 +107,6 @@ class ViewController: NSViewController, NSTextFieldDelegate {
     }
     
     // MARK: - Actions
-    
     @objc func connecttButtonClicked() {
         print("connectingVC")
         
@@ -140,7 +137,6 @@ class ViewController: NSViewController, NSTextFieldDelegate {
     }
     
     // MARK: - UI Configuration
-    
     func updateUI(){
         if isConnectedToPort == true {
             inputView.textField.isEnabled = true
@@ -164,7 +160,6 @@ class ViewController: NSViewController, NSTextFieldDelegate {
     }
     
     // MARK: - Buisness logic
-    
     func disconnectFromPort() {
         serialPort.closePort()
         isConnectedToPort = false
@@ -178,7 +173,6 @@ class ViewController: NSViewController, NSTextFieldDelegate {
         }
         
         do {
-
             let portNumber = debugView.portPropertyView.popUpButton.indexOfSelectedItem + 0
             
             let serialPortName = "/dev/ttys00" + String(portNumber)
@@ -187,12 +181,9 @@ class ViewController: NSViewController, NSTextFieldDelegate {
             
             // Open and congugurate serial port
             try serialPort.openPort()
-            serialPort.setSettings(receiveRate: .baud9600,
-                                   transmitRate: .baud9600,
-                                   minimumBytesToRead: 1)
+            serialPort.setSettings(receiveRate: .baud9600, transmitRate: .baud9600, minimumBytesToRead: 1)
             
             isConnectedToPort = true
-
         } catch PortError.failedToOpen {
             self.debugView.textField.stringValue = "Can't connect to serial port\n\n" + self.debugView.textField.stringValue
         } catch {
@@ -203,7 +194,6 @@ class ViewController: NSViewController, NSTextFieldDelegate {
     }
     
     func waitForInput() {
-
         var inputTextString = ""
         var newInputTextString = ""
         
@@ -213,7 +203,6 @@ class ViewController: NSViewController, NSTextFieldDelegate {
 
         // Check for input in infinite loop
         while isConnectedToPort == true {
-
             DispatchQueue.main.sync {
                 newInputTextString = self.inputView.textField.stringValue
             }
@@ -238,7 +227,6 @@ class ViewController: NSViewController, NSTextFieldDelegate {
             print(difference)
             
             for symbol in difference {
-                
                 guard !(symbol >= "а") && (symbol <= "я") && !(symbol >= "А") && (symbol <= "Я") else {
                     DispatchQueue.main.sync {
                         self.inputView.textField.stringValue = inputTextString
@@ -276,8 +264,6 @@ class ViewController: NSViewController, NSTextFieldDelegate {
         }
     }
 
-    
-
     override var representedObject: Any? {
         didSet {
         // Update the view, if already loaded.
@@ -285,7 +271,6 @@ class ViewController: NSViewController, NSTextFieldDelegate {
     }
     
     // MARK: - AutoLayout
-    
     private func autoLayoutInputContainerView() {
         inputView.widthAnchor.constraint(equalTo: rootStackView.widthAnchor).isActive = true
     }
@@ -309,5 +294,4 @@ class ViewController: NSViewController, NSTextFieldDelegate {
         rootStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 20).isActive = true
         extractedFunc()
     }
-    
 }

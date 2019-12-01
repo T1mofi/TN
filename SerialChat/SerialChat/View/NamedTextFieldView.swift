@@ -9,17 +9,20 @@
 import Cocoa
 
 class NamedTextFieldView: NSView {
-
     var shouldSetupConstraints = true
 
     var label = NSTextField(labelWithString: "Label name")
-    var textField = NSTextField(string: "")
+    var textField = NSTextField(wrappingLabelWithString: "")
     
     init(named labelText: String, placeholder: String) {
         super.init(frame: CGRect.zero)
         
         label.stringValue = labelText
         textField.placeholderString = placeholder
+        
+        textField.isEditable = true
+        textField.wantsLayer = true
+        textField.layer?.backgroundColor = .init(gray: 0.18, alpha: 1)
 
         self.addSubview(label)
         self.addSubview(textField)
@@ -50,10 +53,5 @@ class NamedTextFieldView: NSView {
         super.updateConstraints()
     }
 
-    override func draw(_ dirtyRect: NSRect) {
-        super.draw(dirtyRect)
-
-        // Drawing code here.
-    }
-
+    override func draw(_ dirtyRect: NSRect) { super.draw(dirtyRect) }
 }

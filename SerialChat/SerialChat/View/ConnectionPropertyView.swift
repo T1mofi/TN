@@ -9,8 +9,6 @@
 import Cocoa
 
 class ConnectionPropertyView: NSView {
-
-    
     var shouldSetupConstraints = true
     
     var containerStackView: NSStackView = {
@@ -50,7 +48,6 @@ class ConnectionPropertyView: NSView {
         
         containerStackView.addArrangedSubview(propertyNameLabel)
         containerStackView.addArrangedSubview(popUpButton)
-        
     }
 
     required init?(coder: NSCoder) {
@@ -74,10 +71,5 @@ class ConnectionPropertyView: NSView {
         super.updateConstraints()
     }
     
-    override func draw(_ dirtyRect: NSRect) {
-        super.draw(dirtyRect)
-
-        // Drawing code here.
-    }
-    
+    override func draw(_ dirtyRect: NSRect) { super.draw(dirtyRect) }
 }
