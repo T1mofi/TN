@@ -252,7 +252,6 @@ fileprivate extension ViewController {
     func updateUI(){
         if isConnectedToPort == true {
             inputView.textField.isEnabled = true
-            debugView.connectButton.title = "Disconnect"
             debugView.print(message: "Connected to port")
             setConnectionSettingsButtonState(to: false)
         } else {
