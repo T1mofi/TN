@@ -117,6 +117,7 @@ class ViewController: NSViewController {
 fileprivate extension ViewController {
     func disconnectFromPort() {
         serialPort.closePort()
+        package = []
         isConnectedToPort = false
     }
     
@@ -201,6 +202,15 @@ fileprivate extension ViewController {
                     package.append(ascii)
 
                     if package.count == packageSize {
+                        
+                        var stringPackage = ""
+                        
+                        for byte in package {
+                            stringPackage += byte.binaryRepresentation
+                        }
+                        
+                        package = stringPackage.getBytesRepresentation()
+                        
                         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: packageSize)
                         buffer.initialize(from: &package, count: packageSize)
                             
@@ -210,7 +220,6 @@ fileprivate extension ViewController {
                             
                         print("package sended")
                     }
-                    
                 } catch PortError.failedToOpen {
                     print("Serial port failed to open. You might need root permissions.")
                 } catch {
