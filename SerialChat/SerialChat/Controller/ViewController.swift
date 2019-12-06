@@ -208,15 +208,14 @@ fileprivate extension ViewController {
                         }
                         
                         let stuffedString = stringPackage.stuffed
-                        dataBits = stuffedString.getBytesRepresentation()
+                        var package: [UInt8] = []
+                        package = stuffedString.getBytesRepresentation()
 //                        dataBits = stringPackage.getBytesRepresentation()
                         
-//                        var pack: [UInt8] = []
-                        
-                        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: dataBitsSize)
-                        buffer.initialize(from: &dataBits, count: dataBitsSize)
+                        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: packageSize)
+                        buffer.initialize(from: &package, count: packageSize)
                             
-                        var _ = try self.serialPort.writeBytes(from: buffer, size: dataBitsSize)
+                        var _ = try self.serialPort.writeBytes(from: buffer, size: packageSize)
                             
                         dataBits = []
                             
@@ -236,9 +235,9 @@ fileprivate extension ViewController {
     func backgroundRead() {
         while isConnectedToPort == true {
             // TODO: - Read char
-            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: dataBitsSize)
+            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: packageSize)
             do {
-                guard try serialPort.readBytes(into: buffer, size: dataBitsSize) >= 0 else {
+                guard try serialPort.readBytes(into: buffer, size: packageSize) >= 0 else {
                     continue
                 }
             } catch {
@@ -246,9 +245,18 @@ fileprivate extension ViewController {
             }
         
             var package: [UInt8] = []
-            for index in 0..<dataBitsSize {
+            for index in 0..<packageSize {
                 package.append(buffer[index])
             }
+            
+            var stringPackage = ""
+            
+            for byte in package {
+                stringPackage += byte.binaryRepresentation
+            }
+            
+            let unstuffedString = stringPackage.unstuffed
+            package = unstuffedString.getBytesRepresentation()
             
             DispatchQueue.main.async {
                 for byte in package {
