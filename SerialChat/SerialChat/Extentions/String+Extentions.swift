@@ -23,3 +23,23 @@ extension String {
         return bytes
     }
 }
+
+extension String {
+    var stuffed: String {
+        let stuffedString = self.replacingOccurrences(of: "0000111", with: "00001111")
+        
+        if stuffedString.count % 8 == 0 {
+            return stuffedString
+        } else {
+            let zerosString = String(repeating: "0", count: (8 - stuffedString.count % 8))
+            
+            return stuffedString + zerosString
+        }
+    }
+}
+
+extension String {
+    var unstuffed: String {
+        return self.replacingOccurrences(of: "00001111", with: "0000111")
+    }
+}

@@ -75,7 +75,7 @@ class ViewController: NSViewController {
                 
     var serialPort:SerialPort = SerialPort(path: "")
     
-    var package: [UInt8] = []
+    var dataBits: [UInt8] = []
     var packageSize = 7
     
     // MARK: - LifeCycle
@@ -117,7 +117,7 @@ class ViewController: NSViewController {
 fileprivate extension ViewController {
     func disconnectFromPort() {
         serialPort.closePort()
-        package = []
+        dataBits = []
         isConnectedToPort = false
     }
     
@@ -197,26 +197,29 @@ fileprivate extension ViewController {
                         continue
                     }
                     
-                    print(ascii)
-                        
-                    package.append(ascii)
+                    dataBits.append(ascii)
 
-                    if package.count == packageSize {
-                        
+                    if dataBits.count == packageSize {
                         var stringPackage = ""
                         
-                        for byte in package {
+                        for byte in dataBits {
                             stringPackage += byte.binaryRepresentation
                         }
                         
-                        package = stringPackage.getBytesRepresentation()
+//                        let stuffedString = stringPackage.stuffed
+//                        stuffedString
+                        
+                        dataBits = stringPackage.getBytesRepresentation()
+                        
+                        
+//                        var pack: [UInt8] = []
                         
                         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: packageSize)
-                        buffer.initialize(from: &package, count: packageSize)
+                        buffer.initialize(from: &dataBits, count: packageSize)
                             
                         var _ = try self.serialPort.writeBytes(from: buffer, size: packageSize)
                             
-                        package = []
+                        dataBits = []
                             
                         print("package sended")
                     }
