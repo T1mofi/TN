@@ -26,7 +26,7 @@ extension String {
 
 extension String {
     var stuffed: String {
-        let stuffedString = self.replacingOccurrences(of: "0000111", with: "00001111")
+        return self.replacingOccurrences(of: "0000111", with: "00001111")
     }
 }
 
