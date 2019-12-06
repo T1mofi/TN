@@ -75,6 +75,9 @@ class ViewController: NSViewController {
                 
     var serialPort:SerialPort = SerialPort(path: "")
     
+    var package: [UInt8] = []
+    var packageSize = 7
+    
     // MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -125,7 +128,7 @@ fileprivate extension ViewController {
         }
         
         do {
-            let portNumber = debugView.portPropertyView.popUpButton.indexOfSelectedItem + 2
+            let portNumber = debugView.portPropertyView.popUpButton.indexOfSelectedItem + 4
             
             let serialPortName = "/dev/ttys00" + String(portNumber)
             
@@ -177,7 +180,7 @@ fileprivate extension ViewController {
             // if there are new characters
             let differenceRange = newInputTextString.index(newInputTextString.startIndex, offsetBy: inputTextString.count)..<newInputTextString.endIndex
             let difference = newInputTextString[differenceRange]
-            print(difference)
+            print("diff \(difference)")
             
             for symbol in difference {
                 guard !(symbol >= "а") && (symbol <= "я") && !(symbol >= "А") && (symbol <= "Я") else {
@@ -189,7 +192,25 @@ fileprivate extension ViewController {
             
                 do {
                     // TODO: Use writeString
-                    var _ = try self.serialPort.writeChar(String(symbol))
+                    guard let ascii = symbol.asciiValue else {
+                        continue
+                    }
+                    
+                    print(ascii)
+                        
+                    package.append(ascii)
+
+                    if package.count == packageSize {
+                        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: packageSize)
+                        buffer.initialize(from: &package, count: packageSize)
+                            
+                        var _ = try self.serialPort.writeBytes(from: buffer, size: packageSize)
+                            
+                        package = []
+                            
+                        print("package sended")
+                    }
+                    
                 } catch PortError.failedToOpen {
                     print("Serial port failed to open. You might need root permissions.")
                 } catch {
@@ -203,13 +224,25 @@ fileprivate extension ViewController {
     
     func backgroundRead() {
         while isConnectedToPort == true {
-            do{
-                let readCharacter = try serialPort.readChar()
-                DispatchQueue.main.async {
-                    self.outputView.textField.stringValue += String(readCharacter)
+            // TODO: - Read char
+            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: packageSize)
+            do {
+                guard try serialPort.readBytes(into: buffer, size: packageSize) >= 0 else {
+                    continue
                 }
             } catch {
                 print("Error: \(error) after read")
+            }
+        
+            var package: [UInt8] = []
+            for index in 0..<packageSize {
+                package.append(buffer[index])
+            }
+            
+            DispatchQueue.main.async {
+                for byte in package {
+                    self.outputView.textField.stringValue += String(UnicodeScalar(byte))
+                }
             }
         }
     }
@@ -218,7 +251,7 @@ fileprivate extension ViewController {
 // MARK: - NSTextFieldDelegate
 extension ViewController: NSTextFieldDelegate {
     func controlTextDidChange(_ obj: Notification) {
-        print("controlTextDidChangeVC")
+//        print("controlTextDidChangeVC")
     }
 }
 
@@ -252,6 +285,7 @@ fileprivate extension ViewController {
     func updateUI(){
         if isConnectedToPort == true {
             inputView.textField.isEnabled = true
+            debugView.connectButton.title = "Disconnect"
             debugView.print(message: "Connected to port")
             setConnectionSettingsButtonState(to: false)
         } else {
