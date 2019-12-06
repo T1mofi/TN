@@ -76,7 +76,8 @@ class ViewController: NSViewController {
     var serialPort:SerialPort = SerialPort(path: "")
     
     var dataBits: [UInt8] = []
-    var packageSize = 7
+    var dataBitsSize = 7
+    var packageSize = 8
     
     // MARK: - LifeCycle
     override func viewDidLoad() {
@@ -199,25 +200,23 @@ fileprivate extension ViewController {
                     
                     dataBits.append(ascii)
 
-                    if dataBits.count == packageSize {
+                    if dataBits.count == dataBitsSize {
                         var stringPackage = ""
                         
                         for byte in dataBits {
                             stringPackage += byte.binaryRepresentation
                         }
                         
-//                        let stuffedString = stringPackage.stuffed
-//                        stuffedString
-                        
-                        dataBits = stringPackage.getBytesRepresentation()
-                        
+                        let stuffedString = stringPackage.stuffed
+                        dataBits = stuffedString.getBytesRepresentation()
+//                        dataBits = stringPackage.getBytesRepresentation()
                         
 //                        var pack: [UInt8] = []
                         
-                        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: packageSize)
-                        buffer.initialize(from: &dataBits, count: packageSize)
+                        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: dataBitsSize)
+                        buffer.initialize(from: &dataBits, count: dataBitsSize)
                             
-                        var _ = try self.serialPort.writeBytes(from: buffer, size: packageSize)
+                        var _ = try self.serialPort.writeBytes(from: buffer, size: dataBitsSize)
                             
                         dataBits = []
                             
@@ -237,9 +236,9 @@ fileprivate extension ViewController {
     func backgroundRead() {
         while isConnectedToPort == true {
             // TODO: - Read char
-            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: packageSize)
+            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: dataBitsSize)
             do {
-                guard try serialPort.readBytes(into: buffer, size: packageSize) >= 0 else {
+                guard try serialPort.readBytes(into: buffer, size: dataBitsSize) >= 0 else {
                     continue
                 }
             } catch {
@@ -247,7 +246,7 @@ fileprivate extension ViewController {
             }
         
             var package: [UInt8] = []
-            for index in 0..<packageSize {
+            for index in 0..<dataBitsSize {
                 package.append(buffer[index])
             }
             
