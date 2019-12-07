@@ -130,7 +130,7 @@ fileprivate extension ViewController {
         }
         
         do {
-            let portNumber = debugView.portPropertyView.popUpButton.indexOfSelectedItem + 4
+            let portNumber = debugView.portPropertyView.popUpButton.indexOfSelectedItem + 3
             
             let serialPortName = "/dev/ttys00" + String(portNumber)
             
@@ -215,7 +215,10 @@ fileprivate extension ViewController {
                         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: packageSize)
                         buffer.initialize(from: &package, count: packageSize)
                             
-                        var _ = try self.serialPort.writeBytes(from: buffer, size: packageSize)
+                        guard try self.serialPort.writeBytes(from: buffer, size: packageSize) >= 0 else {
+                            print("bytes not sended")
+                            continue
+                        }
                             
                         dataBits = []
                             
