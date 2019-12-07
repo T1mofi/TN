@@ -36,6 +36,12 @@ extension String {
 
 extension String {
     var unstuffed: String {
-        return self.replacingOccurrences(of: "00001111", with: "0000111")
+        var unstuffedString = self.replacingOccurrences(of: "00001111", with: "0000111")
+        
+        if unstuffedString.count == 64 {
+            unstuffedString.removeLast(8)
+        }
+        
+        return unstuffedString
     }
 }
