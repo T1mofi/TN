@@ -74,9 +74,7 @@ class ViewController: NSViewController {
     }
                 
     var serialPort:SerialPort = SerialPort(path: "")
-    
-    var dataBits: [UInt8] = []
-    var dataBitsSize = 7
+
     var packageSize = 8
     
     // MARK: - LifeCycle
@@ -118,7 +116,6 @@ class ViewController: NSViewController {
 fileprivate extension ViewController {
     func disconnectFromPort() {
         serialPort.closePort()
-        dataBits = []
         isConnectedToPort = false
     }
     
@@ -153,6 +150,9 @@ fileprivate extension ViewController {
     func waitForInput() {
         var inputTextString = ""
         var newInputTextString = ""
+
+        var dataBits: [UInt8] = []
+        let dataBitsSize = 7
         
         DispatchQueue.main.sync {
             inputTextString = self.inputView.textField.stringValue
@@ -273,7 +273,8 @@ fileprivate extension ViewController {
 // MARK: - NSTextFieldDelegate
 extension ViewController: NSTextFieldDelegate {
     func controlTextDidChange(_ obj: Notification) {
-//        print("controlTextDidChangeVC")
+        print("controlTextDidChangeVC")
+        print(inputView.textField.stringValue)
     }
 }
 

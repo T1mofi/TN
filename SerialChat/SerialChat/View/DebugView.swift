@@ -55,6 +55,14 @@ class DebugView: NSView, NSTextFieldDelegate {
         return button
     }()
     
+    var adressView: AdressView = {
+        let connectionPropertyView = AdressView()
+        
+        connectionPropertyView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return connectionPropertyView
+    }()
+    
     var portPropertyView: ConnectionPropertyView = {
         let connectionPropertyView = ConnectionPropertyView(named: "Port", propertys: ["COM1", "COM2"])
         
@@ -107,6 +115,7 @@ class DebugView: NSView, NSTextFieldDelegate {
         self.addSubview(optionsStackView)
         
         optionsStackView.addArrangedSubview(connectButton)
+        optionsStackView.addArrangedSubview(adressView)
         optionsStackView.addArrangedSubview(portPropertyView)
         optionsStackView.addArrangedSubview(speedPropertyView)
         optionsStackView.addArrangedSubview(parityPropertyView)
@@ -120,7 +129,6 @@ class DebugView: NSView, NSTextFieldDelegate {
     
     override func updateConstraints() {
         if shouldSetupConstraints == true {
-
             label.topAnchor.constraint(equalTo: self.topAnchor, constant: 3).isActive = true
             label.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 3).isActive = true
             label.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: 3).isActive = true
