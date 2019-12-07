@@ -147,94 +147,6 @@ fileprivate extension ViewController {
         return true
     }
     
-    func waitForInput() {
-        var inputTextString = ""
-        var newInputTextString = ""
-
-        var dataBits: [UInt8] = []
-        let dataBitsSize = 7
-        
-        DispatchQueue.main.sync {
-            inputTextString = self.inputView.textField.stringValue
-        }
-
-        // Check for input in infinite loop
-        while isConnectedToPort == true {
-            DispatchQueue.main.sync {
-                newInputTextString = self.inputView.textField.stringValue
-            }
-
-            // If user input char in middle of string
-            let middleDifference = zip(inputTextString, newInputTextString).filter{ $0 != $1 }
-            
-            guard middleDifference.isEmpty else {
-                DispatchQueue.main.sync {
-                    self.inputView.textField.stringValue = inputTextString
-                }
-                continue
-            }
-        
-            guard newInputTextString.count > inputTextString.count else {
-                inputTextString = newInputTextString
-                continue
-            }
-        
-            // if there are new characters
-            let differenceRange = newInputTextString.index(newInputTextString.startIndex, offsetBy: inputTextString.count)..<newInputTextString.endIndex
-            let difference = newInputTextString[differenceRange]
-            print("diff \(difference)")
-            
-            for symbol in difference {
-                guard !(symbol >= "а") && (symbol <= "я") && !(symbol >= "А") && (symbol <= "Я") else {
-                    DispatchQueue.main.sync {
-                        self.inputView.textField.stringValue = inputTextString
-                    }
-                    continue
-                }
-            
-                do {
-                    // TODO: Use writeString
-                    guard let ascii = symbol.asciiValue else {
-                        continue
-                    }
-                    
-                    dataBits.append(ascii)
-
-                    if dataBits.count == dataBitsSize {
-                        var stringPackage = ""
-                        
-                        for byte in dataBits {
-                            stringPackage += byte.binaryRepresentation
-                        }
-                        
-                        let stuffedString = stringPackage.stuffed
-                        var package: [UInt8] = []
-                        package = stuffedString.getBytesRepresentation()
-//                        dataBits = stringPackage.getBytesRepresentation()
-                        
-                        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: packageSize)
-                        buffer.initialize(from: &package, count: packageSize)
-                            
-                        guard try self.serialPort.writeBytes(from: buffer, size: packageSize) >= 0 else {
-                            print("bytes not sended")
-                            continue
-                        }
-                            
-                        dataBits = []
-                            
-                        print("package sended")
-                    }
-                } catch PortError.failedToOpen {
-                    print("Serial port failed to open. You might need root permissions.")
-                } catch {
-                    print("Error: \(error)")
-                }
-            }
-
-            inputTextString = newInputTextString
-        }
-    }
-    
     func backgroundRead() {
         while isConnectedToPort == true {
             // TODO: - Read char
@@ -266,15 +178,93 @@ fileprivate extension ViewController {
                     self.outputView.textField.stringValue += String(UnicodeScalar(byte))
                 }
             }
+            
+            sleep(1)
         }
     }
 }
 
+var inputTextString = ""
+var newInputTextString = ""
+
+var dataBits: [UInt8] = []
+let dataBitsSize = 7
+
 // MARK: - NSTextFieldDelegate
 extension ViewController: NSTextFieldDelegate {
+    func getValidDifference(oldStr: String, newStr: String) -> String {
+        let middleDifference = zip(oldStr, newStr).filter{ $0 != $1 }
+        
+        guard middleDifference.isEmpty else {
+            return ""
+        }
+    
+        guard newStr.count > oldStr.count else {
+            return ""
+        }
+    
+        // if there are new characters
+        let differenceRange = newStr.index(newStr.startIndex, offsetBy: oldStr.count)..<newStr.endIndex
+        let difference = newStr[differenceRange]
+        print("diff \(difference)")
+        
+        var validDifference = ""
+        
+        for symbol in difference {
+            guard let _ = symbol.asciiValue else {
+                continue
+            }
+            
+            validDifference.append(symbol)
+        }
+        
+        return validDifference
+    }
+    
     func controlTextDidChange(_ obj: Notification) {
-        print("controlTextDidChangeVC")
-        print(inputView.textField.stringValue)
+        newInputTextString = self.inputView.textField.stringValue
+        
+        let difference = getValidDifference(oldStr: inputTextString, newStr: newInputTextString)
+        
+        inputTextString += difference
+        inputView.textField.stringValue = inputTextString
+
+        for symbol in difference {
+            do {
+                // TODO: Use writeString
+                let ascii = symbol.asciiValue!
+                
+                dataBits.append(ascii)
+
+                if dataBits.count == dataBitsSize {
+                    var stringPackage = ""
+                    
+                    for byte in dataBits {
+                        stringPackage += byte.binaryRepresentation
+                    }
+                    
+                    let stuffedString = stringPackage.stuffed
+                    var package: [UInt8] = []
+                    package = stuffedString.getBytesRepresentation()
+                    
+                    let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: packageSize)
+                    buffer.initialize(from: &package, count: packageSize)
+                        
+                    guard try self.serialPort.writeBytes(from: buffer, size: packageSize) >= 0 else {
+                        print("bytes not sended")
+                        continue
+                    }
+                        
+                    dataBits = []
+                        
+                    print("package sended")
+                }
+            } catch PortError.failedToOpen {
+                print("Serial port failed to open. You might need root permissions.")
+            } catch {
+                print("Error: \(error)")
+            }
+        }
     }
 }
 
@@ -285,17 +275,10 @@ extension ViewController {
             disconnectFromPort()
         } else {
             guard connectToPort() == true else { return }
-            
-            // TODO: Stop asyn tasks after disconnect
-            
-            //Run the serial port reading function in another thread
-            DispatchQueue.global(qos: .userInteractive).async {
-                self.backgroundRead()
-            }
 
             //Run the serial port reading function in another thread
             DispatchQueue.global(qos: .userInteractive).async {
-                self.waitForInput()
+                self.backgroundRead()
             }
         }
         
