@@ -38,7 +38,7 @@ extension String {
     var unstuffed: String {
         var unstuffedString = self.replacingOccurrences(of: "00001111", with: "0000111")
         
-        if unstuffedString.count == 64 {
+        if unstuffedString.count == 88 {
             unstuffedString.removeLast(8)
         }
         

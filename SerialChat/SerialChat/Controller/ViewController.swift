@@ -85,7 +85,7 @@ class ViewController: NSViewController {
                 
     var serialPort:SerialPort = SerialPort(path: "")
 
-    var packageSize = 8
+    var packageSize = 12
     
     // MARK: - LifeCycle
     override func viewDidLoad() {
@@ -173,14 +173,20 @@ fileprivate extension ViewController {
                 package.append(buffer[index])
             }
             
-            var stringPackage = ""
+            // Remove start byte
+            package.removeFirst()
             
+            var stringPackage = ""
             for byte in package {
                 stringPackage += byte.binaryRepresentation
             }
             
             let unstuffedString = stringPackage.unstuffed
             package = unstuffedString.getBytesRepresentation()
+            
+            let sourceAdress = package.removeFirst()
+            let destinationAdress = package.removeFirst()
+            let error = package.removeLast()
             
             DispatchQueue.main.async {
                 for byte in package {
@@ -245,20 +251,34 @@ extension ViewController: NSTextFieldDelegate {
                 dataBits.append(ascii)
 
                 if dataBits.count == dataBitsSize {
+                    let error: Bool = true
+                    var checkSum: UInt8 = 0
                     var stringPackage = ""
                     
                     let sourceAdress = UInt8(debugView.adressView.sourceAddressInputView.stringValue)!
                     let destinationAdress = UInt8(debugView.adressView.destinationAddressInputView.stringValue)!
                     print(sourceAdress)
                     print(destinationAdress)
+                    
+                    stringPackage += sourceAdress.binaryRepresentation
+                    stringPackage += destinationAdress.binaryRepresentation
         
                     for byte in dataBits {
                         stringPackage += byte.binaryRepresentation
                     }
                     
+                    if error == true {
+                        checkSum = 1
+                    }
+                    
+                    stringPackage += checkSum.binaryRepresentation
+                    
                     let stuffedString = stringPackage.stuffed
+                    
                     var package: [UInt8] = []
-                    package = stuffedString.getBytesRepresentation()
+                    let startByte: UInt8 = 14
+                    package.append(startByte)
+                    package += stuffedString.getBytesRepresentation()
                     
                     let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: packageSize)
                     buffer.initialize(from: &package, count: packageSize)
@@ -268,7 +288,9 @@ extension ViewController: NSTextFieldDelegate {
                         continue
                     }
                         
-                    dataBits = []
+                    defer {
+                        dataBits = []
+                    }
                         
                     print("package sended")
                 }
