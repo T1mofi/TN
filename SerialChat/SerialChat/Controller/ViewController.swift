@@ -70,6 +70,16 @@ class ViewController: NSViewController {
             return false
         }
         
+        
+        // TODO: - Validate value of adresses
+        guard debugView.adressView.sourceAddressInputView.stringValue.isEmpty == false else {
+            return false
+        }
+        
+        guard debugView.adressView.destinationAddressInputView.stringValue.isEmpty == false else {
+            return false
+        }
+        
         return true
     }
                 
@@ -120,7 +130,6 @@ fileprivate extension ViewController {
     }
     
     func connectToPort() -> Bool {
-        
         guard isValidConnetionSettiongs == true else {
             self.debugView.print(message: "Cannot connect invalid connections settings")
             return false
@@ -182,16 +191,7 @@ fileprivate extension ViewController {
             sleep(1)
         }
     }
-}
-
-var inputTextString = ""
-var newInputTextString = ""
-
-var dataBits: [UInt8] = []
-let dataBitsSize = 7
-
-// MARK: - NSTextFieldDelegate
-extension ViewController: NSTextFieldDelegate {
+    
     func getValidDifference(oldStr: String, newStr: String) -> String {
         let middleDifference = zip(oldStr, newStr).filter{ $0 != $1 }
         
@@ -204,9 +204,8 @@ extension ViewController: NSTextFieldDelegate {
         }
     
         // if there are new characters
-        let differenceRange = newStr.index(newStr.startIndex, offsetBy: oldStr.count)..<newStr.endIndex
-        let difference = newStr[differenceRange]
-        print("diff \(difference)")
+        var difference = newStr
+        difference.removeFirst(oldStr.count)
         
         var validDifference = ""
         
@@ -220,7 +219,16 @@ extension ViewController: NSTextFieldDelegate {
         
         return validDifference
     }
-    
+}
+
+var inputTextString = ""
+var newInputTextString = ""
+
+var dataBits: [UInt8] = []
+let dataBitsSize = 7
+
+// MARK: - NSTextFieldDelegate
+extension ViewController: NSTextFieldDelegate {
     func controlTextDidChange(_ obj: Notification) {
         newInputTextString = self.inputView.textField.stringValue
         
@@ -239,6 +247,11 @@ extension ViewController: NSTextFieldDelegate {
                 if dataBits.count == dataBitsSize {
                     var stringPackage = ""
                     
+                    let sourceAdress = UInt8(debugView.adressView.sourceAddressInputView.stringValue)!
+                    let destinationAdress = UInt8(debugView.adressView.destinationAddressInputView.stringValue)!
+                    print(sourceAdress)
+                    print(destinationAdress)
+        
                     for byte in dataBits {
                         stringPackage += byte.binaryRepresentation
                     }
@@ -303,6 +316,8 @@ fileprivate extension ViewController {
     }
     
     func setConnectionSettingsButtonState(to state:Bool) {
+        debugView.adressView.sourceAddressInputView.isEnabled = state
+        debugView.adressView.destinationAddressInputView.isEnabled = state
         debugView.portPropertyView.popUpButton.isEnabled = state
         debugView.speedPropertyView.popUpButton.isEnabled = state
         debugView.parityPropertyView.popUpButton.isEnabled = state
