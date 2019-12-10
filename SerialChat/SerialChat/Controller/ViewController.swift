@@ -84,8 +84,6 @@ class ViewController: NSViewController {
     }
                 
     var serialPort:SerialPort = SerialPort(path: "")
-
-    var packageSize = 12
     
     // MARK: - LifeCycle
     override func viewDidLoad() {
@@ -156,48 +154,6 @@ fileprivate extension ViewController {
         return true
     }
     
-    func backgroundRead() {
-        while isConnectedToPort == true {
-            // TODO: - Read char
-            let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: packageSize)
-            do {
-                guard try serialPort.readBytes(into: buffer, size: packageSize) >= 0 else {
-                    continue
-                }
-            } catch {
-                print("Error: \(error) after read")
-            }
-        
-            var package: [UInt8] = []
-            for index in 0..<packageSize {
-                package.append(buffer[index])
-            }
-            
-            // Remove start byte
-            package.removeFirst()
-            
-            var stringPackage = ""
-            for byte in package {
-                stringPackage += byte.binaryRepresentation
-            }
-            
-            let unstuffedString = stringPackage.unstuffed
-            package = unstuffedString.getBytesRepresentation()
-            
-            let sourceAdress = package.removeFirst()
-            let destinationAdress = package.removeFirst()
-            let error = package.removeLast()
-            
-            DispatchQueue.main.async {
-                for byte in package {
-                    self.outputView.textField.stringValue += String(UnicodeScalar(byte))
-                }
-            }
-            
-            sleep(1)
-        }
-    }
-    
     func getValidDifference(oldStr: String, newStr: String) -> String {
         let middleDifference = zip(oldStr, newStr).filter{ $0 != $1 }
         
@@ -225,6 +181,32 @@ fileprivate extension ViewController {
         
         return validDifference
     }
+    
+    func backgroundRead() {
+        while isConnectedToPort == true {
+            // TODO: - Read char
+            do {
+                var string = try serialPort.readLine()
+                string.removeFirst(8)
+                
+                var unstuffedString = string.unstuffed
+                
+                unstuffedString.removeFirst(8)
+                
+                unstuffedString.removeFirst(8)
+                
+                unstuffedString.removeLast(8)
+    
+                DispatchQueue.main.sync {
+                    outputView.textField.stringValue += unstuffedString.getAsciiStringRepresentation()
+                }
+            } catch {
+                print("Error: \(error) after read")
+            }
+            
+            sleep(1)
+        }
+    }
 }
 
 var inputTextString = ""
@@ -251,48 +233,36 @@ extension ViewController: NSTextFieldDelegate {
                 dataBits.append(ascii)
 
                 if dataBits.count == dataBitsSize {
-                    let error: Bool = true
-                    var checkSum: UInt8 = 0
-                    var stringPackage = ""
+                    defer {
+                        dataBits = []
+                    }
+                    
+                    var package = ""
                     
                     let sourceAdress = UInt8(debugView.adressView.sourceAddressInputView.stringValue)!
                     let destinationAdress = UInt8(debugView.adressView.destinationAddressInputView.stringValue)!
-                    print(sourceAdress)
-                    print(destinationAdress)
                     
-                    stringPackage += sourceAdress.binaryRepresentation
-                    stringPackage += destinationAdress.binaryRepresentation
-        
+                    package += sourceAdress.binaryRepresentation
+                    package += destinationAdress.binaryRepresentation
+                    
                     for byte in dataBits {
-                        stringPackage += byte.binaryRepresentation
+                        package += byte.binaryRepresentation
                     }
                     
+                    let error: Bool = true
+                    var checkSum: UInt8 = 0
                     if error == true {
                         checkSum = 1
                     }
                     
-                    stringPackage += checkSum.binaryRepresentation
+                    package += checkSum.binaryRepresentation
                     
-                    let stuffedString = stringPackage.stuffed
+                    package = package.stuffed
                     
-                    var package: [UInt8] = []
                     let startByte: UInt8 = 14
-                    package.append(startByte)
-                    package += stuffedString.getBytesRepresentation()
+                    package = startByte.binaryRepresentation + package + "\n"
                     
-                    let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: packageSize)
-                    buffer.initialize(from: &package, count: packageSize)
-                        
-                    guard try self.serialPort.writeBytes(from: buffer, size: packageSize) >= 0 else {
-                        print("bytes not sended")
-                        continue
-                    }
-                        
-                    defer {
-                        dataBits = []
-                    }
-                        
-                    print("package sended")
+                    let _ = try self.serialPort.writeString(package)
                 }
             } catch PortError.failedToOpen {
                 print("Serial port failed to open. You might need root permissions.")

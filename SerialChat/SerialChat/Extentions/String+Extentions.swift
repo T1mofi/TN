@@ -22,26 +22,28 @@ extension String {
         
         return bytes
     }
+    
+    func getAsciiStringRepresentation() -> String {
+        let bytes = self.getBytesRepresentation()
+        
+        var asciiString = ""
+        
+        for byte in bytes {
+            asciiString += String(UnicodeScalar(byte))
+        }
+        
+        return asciiString
+    }
 }
 
 extension String {
     var stuffed: String {
-        let stuffedString = self.replacingOccurrences(of: "0000111", with: "00001111")
-
-        let zerosString = String(repeating: "0", count: (8 - stuffedString.count % 8))
-        
-        return stuffedString + zerosString
+        return self.replacingOccurrences(of: "0000111", with: "00001111")
     }
 }
 
 extension String {
     var unstuffed: String {
-        var unstuffedString = self.replacingOccurrences(of: "00001111", with: "0000111")
-        
-        if unstuffedString.count == 88 {
-            unstuffedString.removeLast(8)
-        }
-        
-        return unstuffedString
+        return self.replacingOccurrences(of: "00001111", with: "0000111")
     }
 }
