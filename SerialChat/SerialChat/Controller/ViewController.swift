@@ -191,10 +191,13 @@ fileprivate extension ViewController {
                 
                 var unstuffedString = string.unstuffed
                 
+                let sourceAdress = unstuffedString.getAdress()
                 unstuffedString.removeFirst(8)
                 
+                let destinationAdress = unstuffedString.getAdress()
                 unstuffedString.removeFirst(8)
                 
+                let checkSum = unstuffedString.getCheckSum()
                 unstuffedString.removeLast(8)
     
                 DispatchQueue.main.sync {

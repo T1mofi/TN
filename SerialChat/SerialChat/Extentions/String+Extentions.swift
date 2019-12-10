@@ -23,6 +23,26 @@ extension String {
         return bytes
     }
     
+    func getAdress() -> UInt8 {
+        let startIndex = self.startIndex
+        guard let endIndex = self.index(startIndex, offsetBy: 8, limitedBy: self.endIndex) else { return 0 }
+        let range = startIndex..<endIndex
+        let substring = String(self[range])
+        let adress = UInt8(substring, radix: 2)!
+        
+        return adress
+    }
+    
+    func getCheckSum() -> UInt8 {
+        let endIndex = self.endIndex
+        guard let startIndex = self.index(endIndex, offsetBy: -8, limitedBy: self.startIndex) else { return 0 }
+        let range = startIndex..<endIndex
+        let substring = String(self[range])
+        let checkSum = UInt8(substring, radix: 2)!
+        
+        return checkSum
+    }
+    
     func getAsciiStringRepresentation() -> String {
         let bytes = self.getBytesRepresentation()
         
