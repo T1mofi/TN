@@ -16,4 +16,14 @@ extension UInt8 {
 
         return zerosString + binaryString
     }
+    
+    var hexRepresentation: String {
+        var hexString = String(self, radix: 16)
+        
+        if self <= 15 {
+            hexString = "0" + hexString
+        }
+        
+        return hexString
+    }
 }

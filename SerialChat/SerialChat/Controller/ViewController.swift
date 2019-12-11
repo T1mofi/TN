@@ -186,22 +186,22 @@ fileprivate extension ViewController {
         while isConnectedToPort == true {
             // TODO: - Read char
             do {
-                var string = try serialPort.readLine()
-                string.removeFirst(8)
+                var binaryString = try serialPort.readLine()
+                binaryString.removeFirst(8)
                 
-                var unstuffedString = string.unstuffed
+                var unstuffedBinaryString = binaryString.unstuffed
                 
-                let sourceAdress = unstuffedString.getAdress()
-                unstuffedString.removeFirst(8)
+                let sourceAdress = unstuffedBinaryString.getAdress()
+                unstuffedBinaryString.removeFirst(8)
                 
-                let destinationAdress = unstuffedString.getAdress()
-                unstuffedString.removeFirst(8)
+                let destinationAdress = unstuffedBinaryString.getAdress()
+                unstuffedBinaryString.removeFirst(8)
                 
-                let checkSum = unstuffedString.getCheckSum()
-                unstuffedString.removeLast(8)
+                let checkSum = unstuffedBinaryString.getCheckSum()
+                unstuffedBinaryString.removeLast(8)
     
                 DispatchQueue.main.sync {
-                    outputView.textField.stringValue += unstuffedString.getAsciiStringRepresentation()
+                    outputView.textField.stringValue += unstuffedBinaryString.getAsciiStringRepresentation()
                 }
             } catch {
                 print("Error: \(error) after read")
