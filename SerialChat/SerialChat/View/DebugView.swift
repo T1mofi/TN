@@ -105,6 +105,14 @@ class DebugView: NSView, NSTextFieldDelegate {
        return connectionPropertyView
     }()
     
+    var errorCheckBox: NSButton = {
+        let button = NSButton(checkboxWithTitle: "Error", target: nil, action: nil)
+        
+        button.state = NSButton.StateValue.off
+        
+        return button
+    }()
+    
     init(named labelText: String, placeholder: String) {
         super.init(frame: CGRect.zero)
         
@@ -121,6 +129,7 @@ class DebugView: NSView, NSTextFieldDelegate {
         optionsStackView.addArrangedSubview(parityPropertyView)
         optionsStackView.addArrangedSubview(stopBitsPropertyView)
         optionsStackView.addArrangedSubview(byteSizePropertyView)
+        optionsStackView.addArrangedSubview(errorCheckBox)
     }
 
     required init?(coder: NSCoder) {

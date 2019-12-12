@@ -349,6 +349,7 @@ fileprivate extension ViewController {
         debugView.parityPropertyView.popUpButton.isEnabled = state
         debugView.stopBitsPropertyView.popUpButton.isEnabled = state
         debugView.byteSizePropertyView.popUpButton.isEnabled = state
+        debugView.errorCheckBox.isEnabled = state
     }
 }
 
@@ -363,7 +364,7 @@ fileprivate extension ViewController {
     }
     
     func autoLayoutDebugContainerView() {
-        debugView.heightAnchor.constraint(equalToConstant: 280).isActive = true
+        debugView.heightAnchor.constraint(equalToConstant: 300).isActive = true
         debugView.widthAnchor.constraint(equalTo: rootStackView.widthAnchor).isActive = true
     }
 
