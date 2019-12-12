@@ -18,7 +18,7 @@ extension UInt8 {
     }
     
     var hexRepresentation: String {
-        var hexString = String(self, radix: 16)
+        var hexString = String(self, radix: 16, uppercase: true)
         
         if self <= 15 {
             hexString = "0" + hexString

@@ -191,17 +191,30 @@ fileprivate extension ViewController {
                 
                 var unstuffedBinaryString = binaryString.unstuffed
                 
-                let sourceAdress = unstuffedBinaryString.getAdress()
-                unstuffedBinaryString.removeFirst(8)
+                var bytes = unstuffedBinaryString.getBytesRepresentation()
                 
-                let destinationAdress = unstuffedBinaryString.getAdress()
-                unstuffedBinaryString.removeFirst(8)
+                let sourceAdress = bytes.removeFirst()
                 
-                let checkSum = unstuffedBinaryString.getCheckSum()
-                unstuffedBinaryString.removeLast(8)
-    
                 DispatchQueue.main.sync {
-                    outputView.textField.stringValue += unstuffedBinaryString.getAsciiStringRepresentation()
+                    debugView.textField.stringValue += "\nsourceAdress - \(sourceAdress)"
+                }
+                
+                let destinationAdress = bytes.removeFirst()
+                
+                DispatchQueue.main.sync {
+                    debugView.textField.stringValue += "\ndestinationAdress - \(destinationAdress)"
+                }
+                
+                let checkSum = bytes.removeLast()
+                
+                DispatchQueue.main.sync {
+                    debugView.textField.stringValue += "\ncheckSum - \(checkSum)"
+                }
+    
+                for byte in bytes {
+                    DispatchQueue.main.sync {
+                        outputView.textField.stringValue += String(UnicodeScalar(byte))
+                    }
                 }
             } catch {
                 print("Error: \(error) after read")
@@ -263,9 +276,27 @@ extension ViewController: NSTextFieldDelegate {
                     package = package.stuffed
                     
                     let startByte: UInt8 = 14
-                    package = startByte.binaryRepresentation + package + "\n"
+                    package = startByte.binaryRepresentation + package
+
+                    var packageWithZeros = package
+                    if (package.count % 8) != 0 {
+                        packageWithZeros = package + String(repeating: "0", count: 8 - (package.count % 8))
+                    }
                     
-                    let _ = try self.serialPort.writeString(package)
+                    let bytes = packageWithZeros.getBytesRepresentation()
+                    
+                    var hexValuesString = ""
+                    
+                    for byte in bytes {
+                        hexValuesString += byte.hexRepresentation + " "
+                        if hexValuesString.count == 18 {
+                            hexValuesString += "\n"
+                        }
+                    }
+                    
+                    debugView.print(message: "Stuffed package\n" + hexValuesString)
+                    
+                    let _ = try self.serialPort.writeString(package + "\n")
                 }
             } catch PortError.failedToOpen {
                 print("Serial port failed to open. You might need root permissions.")
