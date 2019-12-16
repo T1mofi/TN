@@ -265,9 +265,8 @@ extension ViewController: NSTextFieldDelegate {
                         package += byte.binaryRepresentation
                     }
                     
-                    let error: Bool = true
                     var checkSum: UInt8 = 0
-                    if error == true {
+                    if debugView.errorCheckBox.state.rawValue  == 1 {
                         checkSum = 1
                     }
                     
