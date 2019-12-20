@@ -194,7 +194,7 @@ fileprivate extension ViewController {
                 var binaryString = try serialPort.readLine()
                 binaryString.removeFirst(8)
                 
-                var unstuffedBinaryString = binaryString.unstuffed
+                let unstuffedBinaryString = binaryString.unstuffed
                 
                 var bytes = unstuffedBinaryString.getBytesRepresentation()
                 
@@ -234,6 +234,26 @@ let dataBitsSize = 7
 
 // MARK: - NSTextFieldDelegate
 extension ViewController: NSTextFieldDelegate {
+    func printStuffedPackage(_ package: String) {
+        var packageWithZeros = package
+        if (package.count % 8) != 0 {
+            packageWithZeros = package + String(repeating: "0", count: 8 - (package.count % 8))
+        }
+        
+        let bytes = packageWithZeros.getBytesRepresentation()
+        
+        var hexValuesString = ""
+        
+        for byte in bytes {
+            hexValuesString += byte.hexRepresentation + " "
+            if hexValuesString.count == 18 {
+                hexValuesString += "\n"
+            }
+        }
+        
+        debugView.print(message: "Stuffed package\n" + hexValuesString)
+    }
+    
     func controlTextDidChange(_ obj: Notification) {
         newInputTextString = self.inputView.textField.stringValue
         
@@ -256,21 +276,11 @@ extension ViewController: NSTextFieldDelegate {
                     
                     var package = ""
                     
-                    let sourceAdress = UInt8(debugView.adressView.sourceAddressInputView.stringValue)
-                    let destinationAdress = UInt8(debugView.adressView.destinationAddressInputView.stringValue)
-                    
-                    if let sourceAdress = sourceAdress {
-                        print("source adress \(sourceAdress)")
-                        package += sourceAdress.binaryRepresentation
-                    }
-                    
-                    if let destinationAdress = destinationAdress {
-                        print("destinationAdress adress \(destinationAdress)")
-                        package += destinationAdress.binaryRepresentation
-                    }
-                    
-//                    package += sourceAdress.binaryRepresentation
-//                    package += destinationAdress.binaryRepresentation
+                    print("source adress \(sourceAdress)")
+                    package += sourceAdress.binaryRepresentation
+                
+                    print("destinationAdress adress \(destinationAdress)")
+                    package += destinationAdress.binaryRepresentation
                     
                     for byte in dataBits {
                         package += byte.binaryRepresentation
@@ -288,23 +298,7 @@ extension ViewController: NSTextFieldDelegate {
                     let startByte: UInt8 = 14
                     package = startByte.binaryRepresentation + package
 
-                    var packageWithZeros = package
-                    if (package.count % 8) != 0 {
-                        packageWithZeros = package + String(repeating: "0", count: 8 - (package.count % 8))
-                    }
-                    
-                    let bytes = packageWithZeros.getBytesRepresentation()
-                    
-                    var hexValuesString = ""
-                    
-                    for byte in bytes {
-                        hexValuesString += byte.hexRepresentation + " "
-                        if hexValuesString.count == 18 {
-                            hexValuesString += "\n"
-                        }
-                    }
-                    
-                    debugView.print(message: "Stuffed package\n" + hexValuesString)
+                    printStuffedPackage(package)
                     
                     let _ = try self.serialPort.writeString(package + "\n")
                 }
