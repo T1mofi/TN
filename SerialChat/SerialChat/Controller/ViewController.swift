@@ -71,19 +71,24 @@ class ViewController: NSViewController {
         }
         
         
-        // TODO: - Validate value of adresses
-        guard debugView.adressView.sourceAddressInputView.stringValue.isEmpty == false else {
+        guard let sourceAdress = UInt8(debugView.adressView.sourceAddressInputView.stringValue) else {
             return false
         }
         
-        guard debugView.adressView.destinationAddressInputView.stringValue.isEmpty == false else {
+        self.sourceAdress = sourceAdress
+        
+        guard let destinationAdress = UInt8(debugView.adressView.destinationAddressInputView.stringValue) else {
             return false
         }
+        
+        self.destinationAdress = destinationAdress
         
         return true
     }
                 
     var serialPort:SerialPort = SerialPort(path: "")
+    var sourceAdress: UInt8 = 0
+    var destinationAdress: UInt8 = 0
     
     // MARK: - LifeCycle
     override func viewDidLoad() {
@@ -134,7 +139,7 @@ fileprivate extension ViewController {
         }
         
         do {
-            let portNumber = debugView.portPropertyView.popUpButton.indexOfSelectedItem + 3
+            let portNumber = debugView.portPropertyView.popUpButton.indexOfSelectedItem + 4
             
             let serialPortName = "/dev/ttys00" + String(portNumber)
             
@@ -194,21 +199,17 @@ fileprivate extension ViewController {
                 var bytes = unstuffedBinaryString.getBytesRepresentation()
                 
                 let sourceAdress = bytes.removeFirst()
-                
-                DispatchQueue.main.sync {
-                    debugView.textField.stringValue += "\nsourceAdress - \(sourceAdress)"
-                }
-                
                 let destinationAdress = bytes.removeFirst()
                 
-                DispatchQueue.main.sync {
-                    debugView.textField.stringValue += "\ndestinationAdress - \(destinationAdress)"
+                guard self.sourceAdress == destinationAdress else {
+                    debugView.print(message: "Pasckage was sended to destination \(destinationAdress)")
+                    continue
                 }
                 
                 let checkSum = bytes.removeLast()
                 
-                DispatchQueue.main.sync {
-                    debugView.textField.stringValue += "\ncheckSum - \(checkSum)"
+                guard checkSum == 0 else {
+                    continue
                 }
     
                 for byte in bytes {
@@ -255,18 +256,28 @@ extension ViewController: NSTextFieldDelegate {
                     
                     var package = ""
                     
-                    let sourceAdress = UInt8(debugView.adressView.sourceAddressInputView.stringValue)!
-                    let destinationAdress = UInt8(debugView.adressView.destinationAddressInputView.stringValue)!
+                    let sourceAdress = UInt8(debugView.adressView.sourceAddressInputView.stringValue)
+                    let destinationAdress = UInt8(debugView.adressView.destinationAddressInputView.stringValue)
                     
-                    package += sourceAdress.binaryRepresentation
-                    package += destinationAdress.binaryRepresentation
+                    if let sourceAdress = sourceAdress {
+                        print("source adress \(sourceAdress)")
+                        package += sourceAdress.binaryRepresentation
+                    }
+                    
+                    if let destinationAdress = destinationAdress {
+                        print("destinationAdress adress \(destinationAdress)")
+                        package += destinationAdress.binaryRepresentation
+                    }
+                    
+//                    package += sourceAdress.binaryRepresentation
+//                    package += destinationAdress.binaryRepresentation
                     
                     for byte in dataBits {
                         package += byte.binaryRepresentation
                     }
                     
                     var checkSum: UInt8 = 0
-                    if debugView.errorCheckBox.state.rawValue  == 1 {
+                    if debugView.errorCheckBox.state.rawValue == 1 {
                         checkSum = 1
                     }
                     
@@ -348,7 +359,6 @@ fileprivate extension ViewController {
         debugView.parityPropertyView.popUpButton.isEnabled = state
         debugView.stopBitsPropertyView.popUpButton.isEnabled = state
         debugView.byteSizePropertyView.popUpButton.isEnabled = state
-        debugView.errorCheckBox.isEnabled = state
     }
 }
 
