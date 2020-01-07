@@ -12,6 +12,7 @@
 		07274AE5234FB75400DD7868 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 07274AE4234FB75400DD7868 /* Assets.xcassets */; };
 		07274AE8234FB75400DD7868 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 07274AE6234FB75400DD7868 /* Main.storyboard */; };
 		077F20AC239C1B9300D66732 /* AdressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 077F20AB239C1B9300D66732 /* AdressView.swift */; };
+		078223D123AD004000A0C9D1 /* CRCService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 078223D023AD004000A0C9D1 /* CRCService.swift */; };
 		07B58221238811B600519DC6 /* ConnectionPropertyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B58220238811B600519DC6 /* ConnectionPropertyView.swift */; };
 		07B58223238811C500519DC6 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B58222238811C500519DC6 /* DebugView.swift */; };
 		07B58225238811D800519DC6 /* NamedTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07B58224238811D800519DC6 /* NamedTextFieldView.swift */; };
@@ -29,6 +30,7 @@
 		07274AE9234FB75400DD7868 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		07274AEA234FB75400DD7868 /* SerialChat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SerialChat.entitlements; sourceTree = "<group>"; };
 		077F20AB239C1B9300D66732 /* AdressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdressView.swift; sourceTree = "<group>"; };
+		078223D023AD004000A0C9D1 /* CRCService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CRCService.swift; sourceTree = "<group>"; };
 		07B58220238811B600519DC6 /* ConnectionPropertyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionPropertyView.swift; sourceTree = "<group>"; };
 		07B58222238811C500519DC6 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		07B58224238811D800519DC6 /* NamedTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamedTextFieldView.swift; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 			isa = PBXGroup;
 			children = (
 				07F170582351B84100CABC73 /* SwiftSerial.swift */,
+				078223D023AD004000A0C9D1 /* CRCService.swift */,
 			);
 			path = Librarys;
 			sourceTree = "<group>";
@@ -220,6 +223,7 @@
 				07274AE1234FB75300DD7868 /* AppDelegate.swift in Sources */,
 				07B58225238811D800519DC6 /* NamedTextFieldView.swift in Sources */,
 				077F20AC239C1B9300D66732 /* AdressView.swift in Sources */,
+				078223D123AD004000A0C9D1 /* CRCService.swift in Sources */,
 				07B8ACBB239A85360061F018 /* String+Extentions.swift in Sources */,
 				07B58221238811B600519DC6 /* ConnectionPropertyView.swift in Sources */,
 				07B8ACB9239A85240061F018 /* Uint8+Extensions.swift in Sources */,

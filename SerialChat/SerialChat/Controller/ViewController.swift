@@ -139,7 +139,7 @@ fileprivate extension ViewController {
         }
         
         do {
-            let portNumber = debugView.portPropertyView.popUpButton.indexOfSelectedItem + 4
+            let portNumber = debugView.portPropertyView.popUpButton.indexOfSelectedItem + 1
             
             let serialPortName = "/dev/ttys00" + String(portNumber)
             
@@ -194,9 +194,21 @@ fileprivate extension ViewController {
                 var binaryString = try serialPort.readLine()
                 binaryString.removeFirst(8)
                 
-                let unstuffedBinaryString = binaryString.unstuffed
+                var unstuffedBinaryString = binaryString.unstuffed
                 
                 var bytes = unstuffedBinaryString.getBytesRepresentation()
+                
+                // FIX error
+                let checkSum = bytes.removeLast()
+                let binaryCheckSum = checkSum.binaryRepresentation
+                unstuffedBinaryString.removeLast(8)
+                
+                if CRCService.calculateCRC(with: unstuffedBinaryString) != binaryCheckSum {
+                    unstuffedBinaryString.fixError(checkSum: binaryCheckSum)
+                    print("fix error")
+                }
+                
+                bytes = unstuffedBinaryString.getBytesRepresentation()
                 
                 let sourceAdress = bytes.removeFirst()
                 let destinationAdress = bytes.removeFirst()
@@ -206,12 +218,6 @@ fileprivate extension ViewController {
                     continue
                 }
                 
-                let checkSum = bytes.removeLast()
-                
-                guard checkSum == 0 else {
-                    continue
-                }
-    
                 for byte in bytes {
                     DispatchQueue.main.sync {
                         outputView.textField.stringValue += String(UnicodeScalar(byte))
@@ -286,12 +292,16 @@ extension ViewController: NSTextFieldDelegate {
                         package += byte.binaryRepresentation
                     }
                     
-                    var checkSum: UInt8 = 0
+                    var crc = CRCService.calculateCRC(with: package)
+                    print(crc)
+                    
+                    print(package)
                     if debugView.errorCheckBox.state.rawValue == 1 {
-                        checkSum = 1
+                        package.makeRandomError()
+                        print(package)
                     }
                     
-                    package += checkSum.binaryRepresentation
+                    package += crc
                     
                     package = package.stuffed
                     

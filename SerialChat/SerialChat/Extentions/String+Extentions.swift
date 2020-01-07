@@ -8,6 +8,89 @@
 
 import Foundation
 
+// MARK: - CRC String extentions
+extension String {
+    mutating func removeFirstZeros() -> String {
+        while true {
+            guard self.count > 8 else {
+                return self
+            }
+            
+            if self[startIndex] == "0" {
+                self.removeFirst()
+            } else {
+                return self
+            }
+        }
+    }
+    
+    // TODO: Can return string without removing smt
+    mutating func removeFirstEight() -> String {
+        guard let endIndex = self.index(startIndex, offsetBy: 8, limitedBy: self.endIndex) else { return self }
+        let substring = String(self[..<endIndex])
+        self.removeFirst(8)
+        
+        return substring
+    }
+    
+    mutating func removeFirstK(_ k: Int) -> String {
+        guard let endIndex = self.index(startIndex, offsetBy: k, limitedBy: self.endIndex) else { return self }
+        let substring = String(self[..<endIndex])
+        self.removeFirst(k)
+        
+        return substring
+    }
+    
+    var xoredWithPolynomial: String {
+        let byte = UInt8(self, radix: 2)!
+        let polynomial = UInt8(131)
+        
+        let xored = byte ^ polynomial
+        
+        return xored.binaryRepresentation
+    }
+    
+    //TODO: it shold not be 4
+    mutating func makeRandomError() {
+        let errorIndex = Int.random(in: 25..<self.count - 8)
+        
+        var startingString = self.removeFirstK(errorIndex)
+        
+        if startingString.removeFirst() == "0" {
+            self = startingString + "1" + self
+        } else {
+            self = startingString + "0" + self
+        }
+    }
+    
+    mutating func swapChar(at index: Int) {
+        let stringIndex = self.index(self.startIndex, offsetBy: index)
+        
+        if self.remove(at: stringIndex) == "0" {
+            self.insert("1", at: stringIndex)
+        } else {
+            self.insert("0", at: stringIndex)
+        }
+    }
+    
+    mutating func fixError(checkSum: String) {
+        
+        var currentIndex = 0
+        for char in self {
+            self.swapChar(at: currentIndex)
+            let crc = CRCService.calculateCRC(with: self)
+            
+            if crc == checkSum {
+                return
+            } else {
+                self.swapChar(at: currentIndex)
+            }
+            
+            currentIndex += 1
+        }
+    }
+}
+
 extension String {
     func getBytesRepresentation() -> [UInt8] {
         var bytes: [UInt8] = []
