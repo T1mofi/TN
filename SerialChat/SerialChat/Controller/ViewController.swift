@@ -203,7 +203,7 @@ fileprivate extension ViewController {
                 let binaryCheckSum = checkSum.binaryRepresentation
                 unstuffedBinaryString.removeLast(8)
                 
-                if CRCService.calculateCRC(with: unstuffedBinaryString) != binaryCheckSum {
+                if CRCService.calculateCRC(for: unstuffedBinaryString) != binaryCheckSum {
                     unstuffedBinaryString.fixError(checkSum: binaryCheckSum)
                     print("fix error")
                 }
@@ -291,22 +291,34 @@ extension ViewController: NSTextFieldDelegate {
                     for byte in dataBits {
                         package += byte.binaryRepresentation
                     }
+                    print("package \(package)")
                     
-                    let crc = CRCService.calculateCRC(with: package)
-                    if debugView.errorCheckBox.state.rawValue == 1 {
-                        package.makeRandomError()
-                    }
+                    let crcCode = CRCService.calculateCRC(for: package)
+                    print("crcCode \(crcCode)")
                     
-                    package += crc
+                    let reminder = CRCService.calculateRemainder(for: crcCode)
+                    print("remindr \(reminder)")
                     
-                    package = package.stuffed
                     
-                    let startByte: UInt8 = 14
-                    package = startByte.binaryRepresentation + package
-
-                    printStuffedPackage(package)
                     
-                    let _ = try self.serialPort.writeString(package + "\n")
+                    
+                    
+                    
+                    
+//                    if debugView.errorCheckBox.state.rawValue == 1 {
+//                        package.makeRandomError()
+//                    }
+//
+//                    package += crcCode
+//
+//                    package = package.stuffed
+//
+//                    let startByte: UInt8 = 14
+//                    package = startByte.binaryRepresentation + package
+//
+//                    printStuffedPackage(package)
+//
+//                    let _ = try self.serialPort.writeString(package + "\n")
                 }
             } catch PortError.failedToOpen {
                 print("Serial port failed to open. You might need root permissions.")

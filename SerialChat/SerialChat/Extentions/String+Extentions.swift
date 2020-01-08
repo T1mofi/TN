@@ -78,7 +78,7 @@ extension String {
         var currentIndex = 0
         for char in self {
             self.swapChar(at: currentIndex)
-            let crc = CRCService.calculateCRC(with: self)
+            let crc = CRCService.calculateCRC(for: self)
             
             if crc == checkSum {
                 return

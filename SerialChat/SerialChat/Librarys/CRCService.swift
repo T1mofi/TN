@@ -11,13 +11,13 @@ import Foundation
 class CRCService {
     static let polynomial = "10000011"
     
-    static func calculateCRC(with binaryString: String) -> String {
-        let remainder = calculateRemainder(with: binaryString + "00000000")
+    static func calculateCRC(for binaryString: String) -> String {
+        let remainder = calculateRemainder(for: binaryString + "00000000")
         
         return binaryString + remainder
     }
     
-    static func calculateRemainder(with binaryString: String) -> String {
+    static func calculateRemainder(for binaryString: String) -> String {
         var remainder = binaryString
         
         while true {
