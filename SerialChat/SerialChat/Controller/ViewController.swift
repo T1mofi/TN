@@ -292,13 +292,9 @@ extension ViewController: NSTextFieldDelegate {
                         package += byte.binaryRepresentation
                     }
                     
-                    var crc = CRCService.calculateCRC(with: package)
-                    print(crc)
-                    
-                    print(package)
+                    let crc = CRCService.calculateCRC(with: package)
                     if debugView.errorCheckBox.state.rawValue == 1 {
                         package.makeRandomError()
-                        print(package)
                     }
                     
                     package += crc
