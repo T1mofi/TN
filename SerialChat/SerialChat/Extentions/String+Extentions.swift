@@ -34,7 +34,10 @@ extension String {
     }
     
     mutating func removeFirstK(_ k: Int) -> String {
-        guard let endIndex = self.index(startIndex, offsetBy: k, limitedBy: self.endIndex) else { return self }
+        guard let endIndex = self.index(startIndex, offsetBy: k, limitedBy: self.endIndex) else {
+            print("error in removeFirstK")
+            return self
+        }
         let substring = String(self[..<endIndex])
         self.removeFirst(k)
         
@@ -52,11 +55,11 @@ extension String {
     
     //TODO: it shold not be 4
     mutating func makeRandomError() {
-        let errorIndex = Int.random(in: 25..<self.count - 8)
+        let errorIndex = Int.random(in: 0..<self.count - 1)
         
         var startingString = self.removeFirstK(errorIndex)
         
-        if startingString.removeFirst() == "0" {
+        if startingString.removeLast() == "0" {
             self = startingString + "1" + self
         } else {
             self = startingString + "0" + self
@@ -73,14 +76,14 @@ extension String {
         }
     }
     
-    mutating func fixError(checkSum: String) {
+    mutating func fixError() {
         
         var currentIndex = 0
         for char in self {
             self.swapChar(at: currentIndex)
-            let crc = CRCService.calculateCRC(for: self)
+            let crc = CRCService.calculateRemainder(for: self)
             
-            if crc == checkSum {
+            if crc == "00000000" {
                 return
             } else {
                 self.swapChar(at: currentIndex)

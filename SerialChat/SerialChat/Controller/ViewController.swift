@@ -204,7 +204,7 @@ fileprivate extension ViewController {
                 unstuffedBinaryString.removeLast(8)
                 
                 if CRCService.calculateCRC(for: unstuffedBinaryString) != binaryCheckSum {
-                    unstuffedBinaryString.fixError(checkSum: binaryCheckSum)
+                    unstuffedBinaryString.fixError()
                     print("fix error")
                 }
                 
@@ -293,16 +293,28 @@ extension ViewController: NSTextFieldDelegate {
                     }
                     print("package \(package)")
                     
-                    let crcCode = CRCService.calculateCRC(for: package)
+                    var crcCode = CRCService.calculateCRC(for: package)
                     print("crcCode \(crcCode)")
                     
                     let reminder = CRCService.calculateRemainder(for: crcCode)
                     print("remindr \(reminder)")
                     
+//                    crcCode.removeFirst()
+//                    crcCode = "1" + crcCode
                     
+                    if debugView.errorCheckBox.state.rawValue == 1 {
+                        crcCode.makeRandomError()
+                    }
+                    print("errCRCc \(crcCode)")
                     
+                    let afterErrorReminder = CRCService.calculateRemainder(for: crcCode)
+                    print("errRmnd \(afterErrorReminder)")
                     
+                    crcCode.fixError()
+                    print("fixdCRC \(crcCode)")
                     
+                    let afterFixingReminder = CRCService.calculateRemainder(for: crcCode)
+                    print("errRmnd \(afterFixingReminder)")
                     
                     
 //                    if debugView.errorCheckBox.state.rawValue == 1 {
