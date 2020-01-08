@@ -81,9 +81,9 @@ extension String {
         var currentIndex = 0
         for char in self {
             self.swapChar(at: currentIndex)
-            let crc = CRCService.calculateRemainder(for: self)
+            let reminder = CRCService.calculateRemainder(for: self)
             
-            if crc == "00000000" {
+            if reminder == "00000000" {
                 return
             } else {
                 self.swapChar(at: currentIndex)

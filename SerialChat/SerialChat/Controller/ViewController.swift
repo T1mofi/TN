@@ -139,7 +139,7 @@ fileprivate extension ViewController {
         }
         
         do {
-            let portNumber = debugView.portPropertyView.popUpButton.indexOfSelectedItem + 1
+            let portNumber = debugView.portPropertyView.popUpButton.indexOfSelectedItem + 3
             
             let serialPortName = "/dev/ttys00" + String(portNumber)
             
@@ -196,22 +196,19 @@ fileprivate extension ViewController {
                 
                 var unstuffedBinaryString = binaryString.unstuffed
                 
-                var bytes = unstuffedBinaryString.getBytesRepresentation()
-                
-                // FIX error
-                let checkSum = bytes.removeLast()
-                let binaryCheckSum = checkSum.binaryRepresentation
-                unstuffedBinaryString.removeLast(8)
-                
-                if CRCService.calculateCRC(for: unstuffedBinaryString) != binaryCheckSum {
+                let reminder = CRCService.calculateRemainder(for: unstuffedBinaryString)
+                if reminder != "00000000" {
                     unstuffedBinaryString.fixError()
-                    print("fix error")
+                    DispatchQueue.main.sync {
+                        debugView.print(message: "Eror ocсurred and fixed")
+                    }
                 }
                 
-                bytes = unstuffedBinaryString.getBytesRepresentation()
+                var bytes = unstuffedBinaryString.getBytesRepresentation()
                 
                 let sourceAdress = bytes.removeFirst()
                 let destinationAdress = bytes.removeFirst()
+                let checkSum = bytes.removeLast()
                 
                 guard self.sourceAdress == destinationAdress else {
                     debugView.print(message: "Pasckage was sended to destination \(destinationAdress)")
@@ -299,8 +296,7 @@ extension ViewController: NSTextFieldDelegate {
                     let reminder = CRCService.calculateRemainder(for: crcCode)
                     print("remindr \(reminder)")
                     
-//                    crcCode.removeFirst()
-//                    crcCode = "1" + crcCode
+                    print("package \(crcCode.getBytesRepresentation())")
                     
                     if debugView.errorCheckBox.state.rawValue == 1 {
                         crcCode.makeRandomError()
@@ -309,28 +305,17 @@ extension ViewController: NSTextFieldDelegate {
                     
                     let afterErrorReminder = CRCService.calculateRemainder(for: crcCode)
                     print("errRmnd \(afterErrorReminder)")
-                    
-                    crcCode.fixError()
-                    print("fixdCRC \(crcCode)")
-                    
-                    let afterFixingReminder = CRCService.calculateRemainder(for: crcCode)
-                    print("errRmnd \(afterFixingReminder)")
-                    
-                    
-//                    if debugView.errorCheckBox.state.rawValue == 1 {
-//                        package.makeRandomError()
-//                    }
-//
-//                    package += crcCode
-//
-//                    package = package.stuffed
-//
-//                    let startByte: UInt8 = 14
-//                    package = startByte.binaryRepresentation + package
-//
-//                    printStuffedPackage(package)
-//
-//                    let _ = try self.serialPort.writeString(package + "\n")
+
+                    package = crcCode
+
+                    package = package.stuffed
+
+                    let startByte: UInt8 = 14
+                    package = startByte.binaryRepresentation + package
+
+                    printStuffedPackage(package)
+
+                    let _ = try self.serialPort.writeString(package + "\n")
                 }
             } catch PortError.failedToOpen {
                 print("Serial port failed to open. You might need root permissions.")
