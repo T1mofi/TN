@@ -139,7 +139,7 @@ fileprivate extension ViewController {
         }
         
         do {
-            let portNumber = debugView.portPropertyView.popUpButton.indexOfSelectedItem + 3
+            let portNumber = debugView.portPropertyView.popUpButton.indexOfSelectedItem + 1
             
             let serialPortName = "/dev/ttys00" + String(portNumber)
             
@@ -194,6 +194,10 @@ fileprivate extension ViewController {
                 var binaryString = try serialPort.readLine()
                 binaryString.removeFirst(8)
                 
+                DispatchQueue.main.sync {
+                    printStuffedPackage(binaryString)
+                }
+                
                 var unstuffedBinaryString = binaryString.unstuffed
                 
                 let reminder = CRCService.calculateRemainder(for: unstuffedBinaryString)
@@ -212,6 +216,7 @@ fileprivate extension ViewController {
                 
                 guard self.sourceAdress == destinationAdress else {
                     debugView.print(message: "Pasckage was sended to destination \(destinationAdress)")
+                    
                     continue
                 }
                 
@@ -279,37 +284,20 @@ extension ViewController: NSTextFieldDelegate {
                     
                     var package = ""
                     
-                    print("source adress \(sourceAdress)")
                     package += sourceAdress.binaryRepresentation
-                
-                    print("destinationAdress adress \(destinationAdress)")
                     package += destinationAdress.binaryRepresentation
-                    
                     for byte in dataBits {
                         package += byte.binaryRepresentation
                     }
-                    print("package \(package)")
                     
                     var crcCode = CRCService.calculateCRC(for: package)
-                    print("crcCode \(crcCode)")
-                    
-                    let reminder = CRCService.calculateRemainder(for: crcCode)
-                    print("remindr \(reminder)")
-                    
-                    print("package \(crcCode.getBytesRepresentation())")
-                    
+    
                     if debugView.errorCheckBox.state.rawValue == 1 {
                         crcCode.makeRandomError()
                     }
-                    print("errCRCc \(crcCode)")
-                    
-                    let afterErrorReminder = CRCService.calculateRemainder(for: crcCode)
-                    print("errRmnd \(afterErrorReminder)")
 
                     package = crcCode
-
                     package = package.stuffed
-
                     let startByte: UInt8 = 14
                     package = startByte.binaryRepresentation + package
 

@@ -80,6 +80,7 @@ extension String {
         
         var currentIndex = 0
         for char in self {
+            // TODO: Should delete this?
             self.swapChar(at: currentIndex)
             let reminder = CRCService.calculateRemainder(for: self)
             
